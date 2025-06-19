@@ -3,7 +3,11 @@ import ProjectDescription
 let perfixBundelId: String = "co.kr.yohns"
 
 let settings = Settings.settings(
-    base: ["SWIFT_VERSION": "5.9"],
+    base:
+        [
+            "SWIFT_VERSION": "5.9",
+            "SWIFT_OPTIMIZATION_LEVEL": "-Onone"
+        ],
     configurations:
     [
         .debug(name: "Debug", xcconfig: .relativeToRoot("Configurations/App-Debug.xcconfig")),
@@ -21,6 +25,7 @@ let project = Project(
             destinations: .macOS,
             product: .app,
             bundleId: "\(perfixBundelId).TestCalendar",
+            deploymentTargets: .macOS("15.2"),
             infoPlist: .default,
             sources: ["TestCalendar/Sources/**"],
             resources: ["TestCalendar/Resources/**"],
