@@ -1,0 +1,4 @@
+#include "Base.xcconfig"
+#include "secrets.xcconfig"
+PRODUCT_BUNDLE_IDENTIFIER = co.kr.yohns.TestCalendar
+OTHER_SWIFT_FLAGS = $(OTHER_SWIFT_FLAGS) -DRELEASE

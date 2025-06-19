@@ -1,0 +1,5 @@
+INFOPLIST_FILE=Derived/InfoPlists/TestCalendar-Info.plist
+PRODUCT_BUNDLE_IDENTIFIER=co.kr.yohns.TestCalendar
+PRODUCT_NAME=TestCalendar
+SDKROOT=macosx
+
