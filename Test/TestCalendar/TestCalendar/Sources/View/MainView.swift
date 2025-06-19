@@ -1,8 +1,12 @@
 import SwiftUI
 
 struct MainView: View {
+    @State private var items = ["🍎", "🍌", "🍇", "🍓", "🍍"]
+    @State private var draggingItem: String?
+    @GestureState private var dragOffset: CGSize = .zero
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("")
     }
 }
 
