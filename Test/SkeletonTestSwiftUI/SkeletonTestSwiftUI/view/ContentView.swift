@@ -2,8 +2,12 @@ import SwiftUI
 import SkeletonUI
 
 struct ContentView: View {
-    let listNameItems: [String] = ["One Line Skeleton", "Multi Line Skeleton"]
-    let listViewItems: [AnyView] = [AnyView(SkeletonOneLine()), AnyView(SkeletonMultiLine())]
+    let listNameItems: [String] = ["One Line Skeleton", "Multi Line Skeleton", "Animation"]
+    let listViewItems: [AnyView] =
+    [AnyView(SkeletonOneLine()),
+     AnyView(SkeletonMultiLine()),
+     AnyView(SkeletonAnimation())
+    ]
     
     var body: some View {
         NavigationStack {
