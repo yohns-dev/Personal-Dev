@@ -2,12 +2,17 @@ import SwiftUI
 import SkeletonUI
 
 struct ContentView: View {
-    let listItems: [any View] = []
+    let listNameItems: [String] = ["One Line Skeleton"]
+    let listViewItems: [AnyView] = [AnyView(SkeletonOneLine())]
     
     var body: some View {
-        VStack {
+        NavigationStack {
             List {
-                
+                ForEach(0..<listNameItems.count, id: \.self) { index in
+                    NavigationLink(listNameItems[index]) {
+                        listViewItems[index]
+                    }
+                }
             }
         }
     }
