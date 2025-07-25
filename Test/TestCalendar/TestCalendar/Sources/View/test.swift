@@ -6,6 +6,8 @@ struct DraggableGridView: View {
     @GestureState private var dragOffset: CGSize = .zero
     @State private var dragLocation: CGPoint = .zero
     
+    //삭제할 부분
+    // 저 나뉘는 부분 또한도 길이를 계산 해서 자동으로 변환할 수 있도록 하기
     let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: 3)
 
     var body: some View {
@@ -17,10 +19,9 @@ struct DraggableGridView: View {
                         isDragging: draggingItem == item,
                         dragOffset: draggingItem == item ? dragOffset : .zero
                     )
-                    .onAppear {
-                        DispatchQueue.main.async { }
-                    }
+                    .onAppear { Task {} }
                     .gesture(
+                        // TODO: 여기 부분 공부 필요
                         LongPressGesture(minimumDuration: 0.2)
                             .sequenced(before: DragGesture())
                             .updating($dragOffset) { value, state, _ in
@@ -92,6 +93,7 @@ struct DraggableGridView: View {
     }
 }
 
+//필요 없는 부분
 struct ItemView: View {
     let item: String
     let isDragging: Bool
