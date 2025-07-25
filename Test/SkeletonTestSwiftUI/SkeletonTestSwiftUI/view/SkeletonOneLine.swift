@@ -11,7 +11,6 @@ struct SkeletonOneLine: View {
             }
         }
         
-        
         Spacer()
         
         Button(isShowingSkeleton ? "스켈레톤 숨기기" : "스켈레톤 보기") {
