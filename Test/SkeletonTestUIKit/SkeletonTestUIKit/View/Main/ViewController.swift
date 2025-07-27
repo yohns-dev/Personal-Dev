@@ -55,11 +55,10 @@ class ViewController: UIViewController {
             tableView.reloadData()
         }
     }
-    
-    
-    
-    
 }
+
+
+// MARK: SkeletonTableViewDelegate
 
 extension ViewController: SkeletonTableViewDelegate {
     
@@ -67,6 +66,7 @@ extension ViewController: SkeletonTableViewDelegate {
     
 }
 
+// MARK: SkeletonTableViewDataSource
 
 extension ViewController: SkeletonTableViewDataSource {
     func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
