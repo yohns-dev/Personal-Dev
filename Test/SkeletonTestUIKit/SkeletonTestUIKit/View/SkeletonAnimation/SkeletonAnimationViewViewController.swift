@@ -1,17 +1,29 @@
 import UIKit
 import SkeletonView
 
+enum AnimationKind {
+    case pulse
+    case gradient
+    case custom
+}
+
 class SkeletonAnimationViewViewController: UIViewController {
     let scrollView = UIScrollView()
     let contentView = UIView()
     var placeholders = [UILabel]()
+    
+    var animationKind: AnimationKind = .pulse
+    
+    var baseColor: UIColor = .clouds
+    var highlightColor: UIColor = .lightGray
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSkeleton()
         setupUI()
         setupAnimationButtons()
-        showPulse()
+        setupColorButtons()
+        restartSkeleton()
     }
     
     private func setupUI() {
@@ -94,18 +106,76 @@ class SkeletonAnimationViewViewController: UIViewController {
         }
     }
     
+    private func setupColorButtons() {
+        let baseColors: [(String, UIColor)] = [("Clouds", .clouds), ("Red", .red), ("Green", .green)]
+        let highlightColors: [(String, UIColor)] = [("Gray", .lightGray), ("Blue", .blue), ("Orange", .orange)]
+        
+        let baseStack = UIStackView()
+        baseStack.axis = .horizontal
+        baseStack.distribution = .fillEqually
+        baseStack.spacing = 8
+        
+        for (title, color) in baseColors {
+            let button = UIButton(type: .system)
+            button.setTitle(title, for: .normal)
+            button.backgroundColor = color
+            button.setTitleColor(.white, for: .normal)
+            button.layer.cornerRadius = 6
+            button.addAction(UIAction { [weak self] _ in
+                self?.baseColor = color
+                self?.restartSkeleton()
+            }, for: .touchUpInside)
+            baseStack.addArrangedSubview(button)
+        }
+        
+        let highlightStack = UIStackView()
+        highlightStack.axis = .horizontal
+        highlightStack.distribution = .fillEqually
+        highlightStack.spacing = 8
+        
+        for (title, color) in highlightColors {
+            let button = UIButton(type: .system)
+            button.setTitle(title, for: .normal)
+            button.backgroundColor = color
+            button.setTitleColor(.white, for: .normal)
+            button.layer.cornerRadius = 6
+            button.addAction(UIAction { [weak self] _ in
+                self?.highlightColor = color
+                self?.restartSkeleton()
+            }, for: .touchUpInside)
+            highlightStack.addArrangedSubview(button)
+        }
+        
+        let container = UIStackView(arrangedSubviews: [baseStack, highlightStack])
+        container.axis = .vertical
+        container.spacing = 12
+        container.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(container)
+        NSLayoutConstraint.activate([
+            container.topAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 16),
+            container.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            container.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+        ])
+    }
+    
+    
     // MARK: Animation Methods
     private func showPulse() {
+        scrollView.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+        animationKind = .pulse
         scrollView.showAnimatedSkeleton(
-            usingColor: .lightGray,
+            usingColor: baseColor,
             transition: .crossDissolve(0.25)
         )
     }
-
+    
     private func showGradient() {
-        let gradient = SkeletonGradient(baseColor: .clouds)
+        scrollView.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+        animationKind = .gradient
+        let gradient = SkeletonGradient(baseColor: baseColor, secondaryColor: highlightColor)
         let animation = SkeletonAnimationBuilder()
-            .makeSlidingAnimation(withDirection: .topBottom, duration: 1.5)
+            .makeSlidingAnimation(withDirection: .leftRight, duration: 1.5)
         
         scrollView.showAnimatedGradientSkeleton(
             usingGradient: gradient,
@@ -113,16 +183,28 @@ class SkeletonAnimationViewViewController: UIViewController {
             transition: .crossDissolve(0.3)
         )
     }
-
+    
     private func showCustomFade() {
-        scrollView.showAnimatedSkeleton { layer in
-            let anim = CABasicAnimation(keyPath: "opacity")
-            anim.fromValue = 0.3
-            anim.toValue = 1.0
-            anim.duration = 1.0
-            anim.autoreverses = true
-            anim.repeatCount = .infinity
-            return anim
+        scrollView.hideSkeleton(reloadDataAfter: false, transition: .crossDissolve(0.25))
+        animationKind = .custom
+        scrollView.showAnimatedSkeleton(usingColor: baseColor) { layer in
+            let animation = CABasicAnimation(keyPath: "opacity")
+            animation.fromValue = 0.3
+            animation.toValue = 1.0
+            animation.duration = 1.0
+            animation.autoreverses = true
+            animation.repeatCount = .infinity
+            return animation
+        }
+    }
+    
+    // MARK: Color Change Methods
+    
+    private func restartSkeleton() {
+        switch animationKind {
+        case .pulse: showPulse()
+        case .gradient: showGradient()
+        case .custom: showCustomFade()
         }
     }
     
