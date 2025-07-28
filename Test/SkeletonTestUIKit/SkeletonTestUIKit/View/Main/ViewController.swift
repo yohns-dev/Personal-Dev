@@ -3,11 +3,11 @@ import SkeletonView
 
 class ViewController: UIViewController {
     private let viewNameList: [String] = [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5"
+        "SkeletonAnimation",
+        "not yet",
+        "not yet",
+        "not yet",
+        "not yet"
     ]
     
     private let tableView = UITableView()
@@ -61,7 +61,18 @@ class ViewController: UIViewController {
 // MARK: SkeletonTableViewDelegate
 
 extension ViewController: SkeletonTableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        switch indexPath.row {
+        case 0:
+            print("111111")
+            let skeletonVC = SkeletonAnimationViewViewController()
+            navigationController?.pushViewController(skeletonVC, animated: true)
+        default:
+            print("ss")
+        }
+    }
     
     
 }
