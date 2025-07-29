@@ -1,8 +1,7 @@
 import SwiftUI
 
-//TODO: overlay를 사용해서 기존 view는 안보이게 만들기
-//TODO: size 조절할 수 있는 기능 추가하기
-//TODO: animaition 효과 추가하기
+//TODO: shape, cornerradius
+
 
 struct ContentView: View {
     private let controller_1 = SkeletonController(animation: .pulse)
@@ -12,6 +11,7 @@ struct ContentView: View {
     var body: some View {
         VStack {
             VStack(spacing: 16) {
+                
                 RoundedRectangle(cornerRadius: 8)
                     .frame(height: 20)
                     .targetSkeleton()
@@ -54,7 +54,7 @@ struct ContentView: View {
                 
                 Text("dsa")
                     .frame(height: 30)
-                    .targetSkeleton()
+                    .targetSkeleton(widthRatio: 2.0)
             }
             .skeletonAnimation(controller: controller_3)
             .padding()
