@@ -4,34 +4,32 @@ struct ShimmerAnimation: View {
     var baseColor: Color
     var highlightColor: Color
 
-    @State private var isAnimating = false
+    @State private var animate = false
 
     var body: some View {
-        GeometryReader { geometry in
-            let width = geometry.size.width
-            let height = geometry.size.height
+            GeometryReader { geometry in
+                let width = geometry.size.width
+                let shimmerWidth = width * 0.6
 
-            ZStack {
-                baseColor
+                ZStack {
+                    baseColor
 
-                LinearGradient(
-                    gradient: Gradient(colors: [
-                        baseColor,
-                        highlightColor,
-                        baseColor
-                    ]),
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-                .frame(width: width * 1.5, height: height)
-                .offset(x: isAnimating ? width : -width)
-                .onAppear {
-                    withAnimation(Animation.linear(duration: 1.2).repeatForever(autoreverses: false)) {
-                        isAnimating = true
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            baseColor,
+                            highlightColor,
+                            baseColor
+                        ]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                    .frame(width: shimmerWidth, height: geometry.size.height)
+                    .offset(x: animate ? width : -shimmerWidth)
+                    .animation(.linear(duration: 1.2).repeatForever(autoreverses: false), value: animate)
+                    .onAppear {
+                        animate = true
                     }
                 }
             }
-            .clipped()
         }
-    }
 }

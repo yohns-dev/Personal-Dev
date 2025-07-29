@@ -1,49 +1,62 @@
 import SwiftUI
 
-struct ShimmerTestView: View {
-    @State private var isAnimating = false
-
-    let baseColor: Color = .gray.opacity(0.3)
-    let highlightColor: Color = .red
+struct ColoredShimmerView: View {
+    @State private var animate = false
 
     var body: some View {
-        ZStack {
-            baseColor
-
-            GeometryReader { geometry in
-                let width = geometry.size.width
-                let height = geometry.size.height
-                let shimmerWidth = width * 1.5
-
-                LinearGradient(
-                    gradient: Gradient(colors: [
-    
-                        baseColor,
-                        highlightColor,
-                        baseColor
-                    ]),
-                    startPoint: .leading,
-                    endPoint: .trailing
-                )
-                .frame(width: shimmerWidth, height: height)
-                .offset(x: 10)
-//                .onAppear {
-//                    isAnimating = false
-//                    withAnimation(.linear(duration: 1.5).repeatForever(autoreverses: false)) {
-//                        isAnimating = true
-//                    }
-//                }
+        Rectangle()
+//        Text("Loading...")
+            .font(.largeTitle)
+            .fontWeight(.bold)
+            .foregroundColor(.gray)
+            .overlay(
+                shimmerOverlay
+            )
+//            .mask( shimmerOverlay )
+//            .mask(
+//                Text("Loading...")
+//                    .font(.largeTitle)
+//                    .fontWeight(.bold)
+//            )
+            .onAppear {
+                withAnimation(
+                    .linear(duration: 1.5)
+                    .repeatForever(autoreverses: false)
+                ) {
+                    animate = true
+                }
             }
-            .clipped()
+    }
+
+    var shimmerOverlay: some View {
+        GeometryReader { geometry in
+            let width = geometry.size.width
+            LinearGradient(
+                gradient: Gradient(colors: [
+                    Color.red.opacity(0.7),
+                    Color.orange,
+                    Color.red.opacity(0.7)
+                ]),
+                startPoint: .leading,
+                endPoint: .trailing
+            )
+            .frame(width: 100, height: geometry.size.height)
+            .offset(x: animate ? width - 100 : -width - 20)
         }
-        .frame(width: 300, height: 24)
-        .cornerRadius(8)
-        .padding()
     }
 }
 
 
+struct testView: View {
+    var body: some View {
+        VStack {
+            ColoredShimmerView()
+                .frame(width: 200, height: 40)
+        }
+    }
+}
+
 
 #Preview {
-    ShimmerTestView()
+    testView()
 }

@@ -4,7 +4,7 @@ import SwiftUI
 
 
 struct ContentView: View {
-    private let controller_1 = SkeletonController(animation: .pulse)
+    private let controller_1 = SkeletonController(animation: .shimmer, baseColor: .red, highlightColor: .blue)
     private let contorller_2 = SkeletonController(animation: .pulse, baseColor: .red)
     private let controller_3 = SkeletonController(animation: .pulse)
     
