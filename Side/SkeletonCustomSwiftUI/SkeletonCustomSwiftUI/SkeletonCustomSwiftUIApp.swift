@@ -1,10 +1,3 @@
-//
-//  SkeletonCustomSwiftUIApp.swift
-//  SkeletonCustomSwiftUI
-//
-//  Created by 고요한 on 7/28/25.
-//
-
 import SwiftUI
 
 @main

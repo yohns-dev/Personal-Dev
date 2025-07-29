@@ -1,6 +1,10 @@
 import SwiftUI
 
-//TODO: shape, cornerradius
+//TODO: 애니메이션 시간, 속도, 딜레이 설정
+//TODO: 트위스트 애니메이션, 글자 애니메이션, 물결 애니메이션 추가
+//TODO: 특정 View에 커스텀 Skeleton적용할 수 있게 만들기
+//예를 들면 VStack{}.custonAnimation(controller: controller, place: [.rectangel(1.0), .rectangel(0.2), .rectangel(0.8)], stack: .HStack, alignmnet: [.leading, .center]) 이런식으로 적용하면 간단하게 그려줄 수 있도록 단 이 부분은 크기조절하는 것을 어떻게 해야할 지 고민할 것
+//TODO: 높이 비율로 조절할 수 있도록 하기
 
 
 struct ContentView: View {
