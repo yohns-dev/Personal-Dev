@@ -7,25 +7,29 @@ struct TargetSkeletonModifier: ViewModifier {
     var shape: SkeletonShapeType
     
     @State private var size: CGSize = .zero
+    @State private var showSkeleton: Bool = false
     
     func body(content: Content) -> some View {
         ZStack {
-            if controller.isAnimating && size != .zero {
+            if !showSkeleton {
+                content
+            }
+            
+            if controller.isAnimating || showSkeleton {
                 shape.clip(
                     controller.animationView
                         .frame(
                             width: size.width * widthRatio,
-                            height: size.height,
-                            alignment: .leading
+                            height: size.height
                         )
+                        .opacity(showSkeleton ? 1 : 0)
+                        .animation(.easeInOut(duration: 0.3), value: showSkeleton)
                 )
                 .frame(
                     width: size.width,
                     height: size.height,
                     alignment: alignment.toAlignment
                 )
-            } else {
-                content
             }
         }
         .background(
@@ -39,6 +43,31 @@ struct TargetSkeletonModifier: ViewModifier {
             width: size == .zero ? nil : size.width,
             height: size == .zero ? nil : size.height
         )
+        .onChange(of: controller.isAnimating) { _, newValue in
+            if newValue {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    showSkeleton = true
+                }
+            }
+            else {
+                Task {
+                    try await Task.sleep(nanoseconds: 300_000_000)
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showSkeleton = false
+                    }
+                }
+            }
+        }
+        .onAppear {
+            if controller.isAnimating {
+                Task {
+                    try await Task.sleep(nanoseconds: 1)
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showSkeleton = true
+                    }
+                }
+            }
+        }
     }
     
 }

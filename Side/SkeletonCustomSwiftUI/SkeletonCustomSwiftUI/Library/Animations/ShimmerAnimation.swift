@@ -3,27 +3,31 @@ import SwiftUI
 struct ShimmerAnimation: View {
     var baseColor: Color
     var highlightColor: Color
-    var speed: Double = 1.0
-    
-    
 
-    @State private var move = false
+    @State private var isAnimating = false
 
     var body: some View {
         GeometryReader { geometry in
+            let width = geometry.size.width
+            let height = geometry.size.height
+
             ZStack {
                 baseColor
 
                 LinearGradient(
-                    gradient: Gradient(colors: [baseColor, highlightColor, baseColor]),
+                    gradient: Gradient(colors: [
+                        baseColor,
+                        highlightColor,
+                        baseColor
+                    ]),
                     startPoint: .leading,
                     endPoint: .trailing
                 )
-                .frame(width: geometry.size.width * 2)
-                .offset(x: move ? -geometry.size.width : geometry.size.width)
+                .frame(width: width * 1.5, height: height)
+                .offset(x: isAnimating ? width : -width)
                 .onAppear {
-                    withAnimation(Animation.linear(duration: speed).repeatForever(autoreverses: false)) {
-                        move = true
+                    withAnimation(Animation.linear(duration: 1.2).repeatForever(autoreverses: false)) {
+                        isAnimating = true
                     }
                 }
             }
