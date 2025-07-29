@@ -14,7 +14,7 @@ struct ContentView: View {
                 
                 RoundedRectangle(cornerRadius: 8)
                     .frame(height: 20)
-                    .targetSkeleton()
+                    .targetSkeleton(widthRatio: 0.6, alignment: .trailing)
                 
                 RoundedRectangle(cornerRadius: 8)
                     .frame(height: 15)
@@ -22,7 +22,7 @@ struct ContentView: View {
                 
                 Text("dsa")
                     .frame(height: 30)
-                    .targetSkeleton()
+                    .targetSkeleton(alignment: .leading)
             }
             .skeletonAnimation(controller: controller_1)
             .padding()
@@ -54,7 +54,7 @@ struct ContentView: View {
                 
                 Text("dsa")
                     .frame(height: 30)
-                    .targetSkeleton(widthRatio: 2.0)
+                    .targetSkeleton(widthRatio: 2.0, alignment: .trailing)
             }
             .skeletonAnimation(controller: controller_3)
             .padding()

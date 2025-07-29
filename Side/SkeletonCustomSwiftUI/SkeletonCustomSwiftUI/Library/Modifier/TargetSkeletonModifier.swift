@@ -3,6 +3,7 @@ import SwiftUI
 struct TargetSkeletonModifier: ViewModifier {
     @EnvironmentObject var controller: SkeletonController
     var widthRatio: CGFloat
+    var alignment: SkeletonAlignmentType
     var shape: SkeletonShapeType
     
     @State private var size: CGSize = .zero
@@ -14,8 +15,14 @@ struct TargetSkeletonModifier: ViewModifier {
                     controller.animationView
                         .frame(
                             width: size.width * widthRatio,
-                            height: size.height
+                            height: size.height,
+                            alignment: .leading
                         )
+                )
+                .frame(
+                    width: size.width,
+                    height: size.height,
+                    alignment: alignment.toAlignment
                 )
             } else {
                 content
@@ -33,4 +40,5 @@ struct TargetSkeletonModifier: ViewModifier {
             height: size == .zero ? nil : size.height
         )
     }
+    
 }
