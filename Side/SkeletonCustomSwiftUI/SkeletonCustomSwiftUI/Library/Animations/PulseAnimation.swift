@@ -4,6 +4,7 @@ import SwiftUI
 struct PulseAnimation: View {
     var baseColor: Color
     var speed: Double = 0.6
+    
 
     @State private var animate = false
 

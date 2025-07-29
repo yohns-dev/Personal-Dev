@@ -4,6 +4,8 @@ struct ShimmerAnimation: View {
     var baseColor: Color
     var highlightColor: Color
     var speed: Double = 1.0
+    
+    
 
     @State private var move = false
 

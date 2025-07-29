@@ -10,8 +10,6 @@ struct TargetSkeletonModifier: ViewModifier {
                     if controller.isAnimating {
                         controller.animationView
                             .clipShape(RoundedRectangle(cornerRadius: 8)) 
-                    } else {
-                        EmptyView()
                     }
                 }
             )
