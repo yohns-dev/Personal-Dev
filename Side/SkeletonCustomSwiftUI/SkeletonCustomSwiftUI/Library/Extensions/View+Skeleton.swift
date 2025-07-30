@@ -5,8 +5,27 @@ extension View {
         self.modifier(TargetSkeletonModifier(widthRatio: widthRatio, alignment: alignment, shape: shape))
     }
     
-    //TODO: 나중에 추가로 애니메이션 컨비규어 따로 만들 수 있도록 하고 아래 함수 두종류로 만들기
+    // MARK: Animation
     func skeletonAnimation(controller: SkeletonController) -> some View {
         self.modifier(SkeletonAnimationModifier(controller: controller))
+    }
+    
+    // MARK: Config
+    func skeletonAnimationConfig(_ config: SkeletonAnimationConfig) -> some View {
+        environment(\.skeletonConfig, config)
+    }
+    
+    func skeletonAnimationConfig(
+        duration: Double = 1.5,
+        delay: Double = 0.0,
+        autoreverses: Bool = true
+    ) -> some View {
+        let config = SkeletonAnimationConfig(
+            duration: duration,
+            delay: delay,
+            autoreverses: autoreverses
+        )
+        return self.skeletonAnimationConfig(config)
+        
     }
 }

@@ -6,6 +6,7 @@ class SkeletonController: ObservableObject {
     var animation: SkeletonAnimationType
     var baseColor: Color
     var highlightColor: Color
+    var defaultConfig: SkeletonAnimationConfig
     
     init(animation: SkeletonAnimationType,
          baseColor: Color = .gray,
@@ -13,12 +14,18 @@ class SkeletonController: ObservableObject {
         self.animation = animation
         self.baseColor = baseColor
         self.highlightColor = highlightColor
+        self.defaultConfig = animation.defaultConfig()
     }
     
-    var animationView: some View {
-        switch animation {
-        case .pulse: return AnyView(PulseAnimation(baseColor: baseColor))
-        case .shimmer: return AnyView(ShimmerAnimation(baseColor: baseColor, highlightColor: highlightColor))
+    var animationView: (_ config: SkeletonAnimationConfig?) -> AnyView {
+        { config in
+            let resolved = config ?? self.defaultConfig
+            switch self.animation {
+            case .pulse:
+                return AnyView(PulseAnimation(baseColor: self.baseColor, config: resolved))
+            case .shimmer:
+                return AnyView(ShimmerAnimation(baseColor: self.baseColor, highlightColor: self.highlightColor, config: resolved))
+            }
         }
     }
     

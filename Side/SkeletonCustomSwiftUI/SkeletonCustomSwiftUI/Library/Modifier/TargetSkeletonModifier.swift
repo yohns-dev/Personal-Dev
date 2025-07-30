@@ -2,6 +2,8 @@ import SwiftUI
 
 struct TargetSkeletonModifier: ViewModifier {
     @EnvironmentObject var controller: SkeletonController
+    @Environment(\.skeletonConfig) private var config
+    
     var widthRatio: CGFloat
     var alignment: SkeletonAlignmentType
     var shape: SkeletonShapeType
@@ -17,7 +19,7 @@ struct TargetSkeletonModifier: ViewModifier {
             
             if controller.isAnimating || showSkeleton {
                 shape.clip(
-                    controller.animationView
+                    controller.animationView(config)
                         .frame(
                             width: size.width * widthRatio,
                             height: size.height

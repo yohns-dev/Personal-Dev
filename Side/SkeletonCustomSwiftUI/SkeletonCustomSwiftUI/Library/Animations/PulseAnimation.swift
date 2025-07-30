@@ -3,8 +3,7 @@ import SwiftUI
 
 struct PulseAnimation: View {
     var baseColor: Color
-    var speed: Double = 0.6
-    
+    var config: SkeletonAnimationConfig
 
     @State private var animate = false
 
@@ -12,8 +11,9 @@ struct PulseAnimation: View {
         baseColor
             .opacity(animate ? 0.4 : 1.0)
             .animation(
-                Animation.easeInOut(duration: speed)
-                    .repeatForever(autoreverses: true),
+                Animation.easeInOut(duration: config.duration)
+                    .delay(config.delay)
+                    .repeatForever(autoreverses: config.autoreverses),
                 value: animate
             )
             .onAppear {
