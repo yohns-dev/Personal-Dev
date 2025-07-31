@@ -28,4 +28,22 @@ extension View {
         return self.skeletonAnimationConfig(config)
         
     }
+    
+    // MARK: Custom
+    func customSkeleton(
+        controller: SkeletonController,
+        place: [SkeletonItem],
+        stack: SkeletonStackType = .vStack(),
+        baseseColor: Color = .gray,
+        highlightColor: Color = .gray.opacity(0.3)
+    ) -> some View {
+        ZStack {
+            self
+                .opacity(controller.isAnimating ? 0 : 1)
+            if controller.isAnimating {
+                SkeletonCustomView(controller: controller, items: place, rootStack: stack, baseColor: baseseColor, highlightColor: highlightColor
+                )
+            }
+        }
+    }
 }

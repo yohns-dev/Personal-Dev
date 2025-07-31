@@ -12,4 +12,6 @@ enum SkeletonAlignmentType {
         case .trailing: return .trailing
         }
     }
+    
+    
 }

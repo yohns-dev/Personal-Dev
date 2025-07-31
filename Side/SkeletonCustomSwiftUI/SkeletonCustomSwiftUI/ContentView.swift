@@ -1,7 +1,18 @@
 import SwiftUI
 
 //TODO: 특정 View에 커스텀 Skeleton적용할 수 있게 만들기
-//예를 들면 VStack{}.custonAnimation(controller: controller, place: [.rectangel(1.0), .rectangel(0.2), .rectangel(0.8)], stack: .HStack, alignmnet: [.leading, .center]) 이런식으로 적용하면 간단하게 그려줄 수 있도록 단 이 부분은 크기조절하는 것을 어떻게 해야할 지 고민할 것
+//    .customSkeleton(
+//            controller: controller,
+//            place: [
+//                .rectangle(widthRatio: 1.0, height: 24, cornerRadius: 8),
+//                .spacer(height: 12),
+//                .hStack(spacing: 12, alignment: .center, items: [
+//                    .circle(size: 40),
+//                    .rectangle(widthRatio: 0.7, height: 16, cornerRadius: 6)
+//                ])
+//            ],
+//            stack: .vStack(spacing: 16, alignment: .leading)
+//        )
 //TODO: 높이 비율로 조절할 수 있도록 하기
 
 
@@ -10,7 +21,7 @@ struct ContentView: View {
     private let contorller_2 = SkeletonController(animation: .pulse, baseColor: .red)
     private let controller_3 = SkeletonController(animation: .textShimmer(text: "loading...", font: .system(size: 15, weight: .bold)), baseColor: .cyan, highlightColor: .brown)
     
-//    private let config_1 = SkeletonAnimationConfig(duration: 2, delay: 0.2, autoreverses: false)
+    //    private let config_1 = SkeletonAnimationConfig(duration: 2, delay: 0.2, autoreverses: false)
     
     var body: some View {
         VStack {
@@ -28,7 +39,7 @@ struct ContentView: View {
                     .frame(height: 30)
                     .targetSkeleton(alignment: .leading)
             }
-//            .skeletonAnimationConfig(config_1)
+            //            .skeletonAnimationConfig(config_1)
             .skeletonAnimation(controller: controller_1)
             .padding()
             
