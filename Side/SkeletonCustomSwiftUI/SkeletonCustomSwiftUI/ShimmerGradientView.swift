@@ -4,8 +4,8 @@ struct ColoredShimmerView: View {
     @State private var animate = false
 
     var body: some View {
-        Rectangle()
-//        Text("Loading...")
+//        Rectangle()
+        Text("Loading...")
             .font(.largeTitle)
             .fontWeight(.bold)
             .foregroundColor(.gray)
@@ -13,11 +13,11 @@ struct ColoredShimmerView: View {
                 shimmerOverlay
             )
 //            .mask( shimmerOverlay )
-//            .mask(
-//                Text("Loading...")
-//                    .font(.largeTitle)
-//                    .fontWeight(.bold)
-//            )
+            .mask(
+                Text("Loading...")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+            )
             .onAppear {
                 withAnimation(
                     .linear(duration: 1.5)

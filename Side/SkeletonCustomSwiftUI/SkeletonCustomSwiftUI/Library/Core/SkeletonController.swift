@@ -25,6 +25,15 @@ class SkeletonController: ObservableObject {
                 return AnyView(PulseAnimation(baseColor: self.baseColor, config: resolved))
             case .shimmer:
                 return AnyView(ShimmerAnimation(baseColor: self.baseColor, highlightColor: self.highlightColor, config: resolved))
+            case .textShimmer(let text, let font):
+                return AnyView(TextShimmerAnimation(
+                    text: text,
+                    font: font ?? .system(size: 16, weight: .bold),
+                    baseColor: self.baseColor,
+                    highlightColor: self.highlightColor,
+                    config: resolved
+                ))
+                
             }
         }
     }
