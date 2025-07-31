@@ -26,11 +26,6 @@ struct TestCustomSkeleton: View {
         .padding()
         .onAppear {
             controller.startAnimating()
-
-//            // 시뮬레이션: 3초 뒤 종료
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-//                controller.stopAnimating()
-//            }
         }
     }
 }
