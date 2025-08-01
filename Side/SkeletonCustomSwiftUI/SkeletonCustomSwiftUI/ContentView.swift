@@ -1,21 +1,5 @@
 import SwiftUI
 
-//TODO: 특정 View에 커스텀 Skeleton적용할 수 있게 만들기
-//    .customSkeleton(
-//            controller: controller,
-//            place: [
-//                .rectangle(widthRatio: 1.0, height: 24, cornerRadius: 8),
-//                .spacer(height: 12),
-//                .hStack(spacing: 12, alignment: .center, items: [
-//                    .circle(size: 40),
-//                    .rectangle(widthRatio: 0.7, height: 16, cornerRadius: 6)
-//                ])
-//            ],
-//            stack: .vStack(spacing: 16, alignment: .leading)
-//        )
-//TODO: 높이 비율로 조절할 수 있도록 하기
-
-
 struct ContentView: View {
     private let controller_1 = SkeletonController(animation: .shimmer, baseColor: .red, highlightColor: .blue)
     private let contorller_2 = SkeletonController(animation: .pulse, baseColor: .red)
@@ -29,7 +13,7 @@ struct ContentView: View {
                 
                 RoundedRectangle(cornerRadius: 8)
                     .frame(height: 20)
-                    .targetSkeleton(widthRatio: 0.6, alignment: .trailing)
+                    .targetSkeleton(widthRatio: 0.6,alignment: .trailing)
                 
                 RoundedRectangle(cornerRadius: 8)
                     .frame(height: 15)

@@ -1,8 +1,8 @@
 import SwiftUI
 
 extension View {
-    func targetSkeleton(widthRatio: CGFloat = 1.0, alignment: SkeletonAlignmentType = .leading, shape: SkeletonShapeType = .rounded(8)) -> some View {
-        self.modifier(TargetSkeletonModifier(widthRatio: widthRatio, alignment: alignment, shape: shape))
+    func targetSkeleton(widthRatio: CGFloat = 1.0, heightRatio: CGFloat = 1.0, alignment: SkeletonAlignmentType = .leading, shape: SkeletonShapeType = .rounded(8)) -> some View {
+        self.modifier(TargetSkeletonModifier(widthRatio: widthRatio, heightRatio: heightRatio, alignment: alignment, shape: shape))
     }
     
     // MARK: Animation

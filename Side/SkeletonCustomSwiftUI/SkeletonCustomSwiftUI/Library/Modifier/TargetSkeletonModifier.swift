@@ -5,6 +5,7 @@ struct TargetSkeletonModifier: ViewModifier {
     @Environment(\.skeletonConfig) private var config
     
     var widthRatio: CGFloat
+    var heightRatio: CGFloat
     var alignment: SkeletonAlignmentType
     var shape: SkeletonShapeType
     
@@ -22,7 +23,7 @@ struct TargetSkeletonModifier: ViewModifier {
                     controller.animationView(config)
                         .frame(
                             width: size.width * widthRatio,
-                            height: size.height
+                            height: size.height * heightRatio
                         )
                         .opacity(showSkeleton ? 1 : 0)
                         .animation(.easeInOut(duration: 0.3), value: showSkeleton)
