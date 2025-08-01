@@ -7,11 +7,23 @@ struct SkeletonCustomView: View {
     var baseColor: Color
     var highlightColor: Color
     
+    @State private var totalWidth: CGFloat? = nil
+    
     var body: some View {
-        GeometryReader { geometry in
-            let totalWidth = geometry.size.width
-            buildStack(from: items, totalWidth: totalWidth)
-                .allowsHitTesting(false)
+        ZStack(alignment: .topLeading) {
+            if let width = totalWidth {
+                buildStack(from: items, totalWidth: width)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .allowsHitTesting(false)
+            }
+            
+            GeometryReader { geometry in
+                Color.clear
+                    .onAppear {
+                        totalWidth = geometry.size.width
+                    }
+            }
+            .frame(height: 0)
         }
     }
     
