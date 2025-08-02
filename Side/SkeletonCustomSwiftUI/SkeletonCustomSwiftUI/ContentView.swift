@@ -1,7 +1,5 @@
 import SwiftUI
 
-//TODO: 코드 전체 리펙토링 진행
-
 struct ContentView: View {
     private let controller_1 = SkeletonController(animation: .shimmer, baseColor: .red, highlightColor: .blue)
     private let contorller_2 = SkeletonController(animation: .pulse, baseColor: .red)
