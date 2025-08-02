@@ -9,16 +9,16 @@ struct TargetSkeletonModifier: ViewModifier {
     var alignment: SkeletonAlignmentType
     var shape: SkeletonShapeType
     
-    @State private var size: CGSize = .zero
+    @State private var size: CGSize?
     @State private var showSkeleton: Bool = false
-    
+
     func body(content: Content) -> some View {
         ZStack {
             if !showSkeleton {
                 content
             }
-            
-            if controller.isAnimating || showSkeleton {
+
+            if let size, controller.isAnimating || showSkeleton {
                 shape.clip(
                     controller.animationView(config)
                         .frame(
@@ -28,11 +28,7 @@ struct TargetSkeletonModifier: ViewModifier {
                         .opacity(showSkeleton ? 1 : 0)
                         .animation(.easeInOut(duration: 0.3), value: showSkeleton)
                 )
-                .frame(
-                    width: size.width,
-                    height: size.height,
-                    alignment: alignment.toAlignment
-                )
+                .frame(width: size.width, height: size.height, alignment: alignment.toAlignment)
             }
         }
         .background(
@@ -42,35 +38,17 @@ struct TargetSkeletonModifier: ViewModifier {
                     self.size = newSize
                 }
         )
-        .frame(
-            width: size == .zero ? nil : size.width,
-            height: size == .zero ? nil : size.height
-        )
         .onChange(of: controller.isAnimating) { _, newValue in
-            if newValue {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    showSkeleton = true
-                }
-            }
-            else {
-                Task {
-                    try await Task.sleep(nanoseconds: 300_000_000)
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        showSkeleton = false
-                    }
-                }
+            withAnimation(.easeInOut(duration: 0.3)) {
+                showSkeleton = newValue
             }
         }
         .onAppear {
             if controller.isAnimating {
-                Task {
-                    try await Task.sleep(nanoseconds: 1)
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        showSkeleton = true
-                    }
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    showSkeleton = true
                 }
             }
         }
     }
-    
 }

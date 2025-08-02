@@ -9,33 +9,18 @@ class SkeletonController: ObservableObject {
     var defaultConfig: SkeletonAnimationConfig
     
     init(animation: SkeletonAnimationType,
-         baseColor: Color = .gray,
-         highlightColor: Color = .gray.opacity(0.6)) {
+         baseColor: Color = Color(hue: 0, saturation: 0, brightness: 0.75),
+         highlightColor: Color = Color(hue: 0, saturation: 0, brightness: 0.92)){
         self.animation = animation
         self.baseColor = baseColor
         self.highlightColor = highlightColor
         self.defaultConfig = animation.defaultConfig()
     }
     
-    var animationView: (_ config: SkeletonAnimationConfig?) -> AnyView {
-        { config in
-            let resolved = config ?? self.defaultConfig
-            switch self.animation {
-            case .pulse:
-                return AnyView(PulseAnimation(baseColor: self.baseColor, config: resolved))
-            case .shimmer:
-                return AnyView(ShimmerAnimation(baseColor: self.baseColor, highlightColor: self.highlightColor, config: resolved))
-            case .textShimmer(let text, let font):
-                return AnyView(TextShimmerAnimation(
-                    text: text,
-                    font: font ?? .system(size: 16, weight: .bold),
-                    baseColor: self.baseColor,
-                    highlightColor: self.highlightColor,
-                    config: resolved
-                ))
-                
-            }
-        }
+    @ViewBuilder
+    func animationView(_ config: SkeletonAnimationConfig?) -> some View {
+        let selectedConfig = config ?? defaultConfig
+        animation.makeView(baseColor: baseColor, highlightColor: highlightColor, config: selectedConfig)
     }
     
     func startAnimating() {
@@ -46,3 +31,4 @@ class SkeletonController: ObservableObject {
         isAnimating = false
     }
 }
+

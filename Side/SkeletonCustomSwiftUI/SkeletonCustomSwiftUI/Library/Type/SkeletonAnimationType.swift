@@ -3,16 +3,33 @@ import SwiftUICore
 enum SkeletonAnimationType {
     case pulse
     case shimmer
-    case textShimmer(text: String, font: Font? = nil)
+    case textShimmer(text: String, font: Font?)
     
-    func defaultConfig() -> SkeletonAnimationConfig {
+    @ViewBuilder
+    func makeView(
+        baseColor: Color,
+        highlightColor: Color,
+        config: SkeletonAnimationConfig
+    ) -> some View {
         switch self {
         case .pulse:
-            return SkeletonAnimationConfig(duration: 1.5, delay: 0, autoreverses: true)
+            PulseAnimation(baseColor: baseColor, config: config)
+
         case .shimmer:
-            return SkeletonAnimationConfig(duration: 1.5, delay: 0, autoreverses: false)
-        case .textShimmer:
-            return SkeletonAnimationConfig(duration: 1.5, delay: 0, autoreverses: true)
+            ShimmerAnimation(baseColor: baseColor, highlightColor: highlightColor, config: config)
+
+        case let .textShimmer(text, font):
+            TextShimmerAnimation(
+                text: text,
+                font: font ?? .system(size: 16, weight: .bold),
+                baseColor: baseColor,
+                highlightColor: highlightColor,
+                config: config
+            )
         }
+    }
+
+    func defaultConfig() -> SkeletonAnimationConfig {
+        SkeletonAnimationConfig()
     }
 }

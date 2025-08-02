@@ -1,5 +1,7 @@
 import SwiftUI
 
+//TODO: 코드 전체 리펙토링 진행
+
 struct ContentView: View {
     private let controller_1 = SkeletonController(animation: .shimmer, baseColor: .red, highlightColor: .blue)
     private let contorller_2 = SkeletonController(animation: .pulse, baseColor: .red)
@@ -17,11 +19,11 @@ struct ContentView: View {
                 
                 RoundedRectangle(cornerRadius: 8)
                     .frame(height: 15)
-                    .targetSkeleton()
+                    .targetSkeleton(widthRatio: 0.5, alignment: .leading)
                 
                 Text("dsa")
                     .frame(height: 30)
-                    .targetSkeleton(alignment: .leading)
+                    .targetSkeleton()
             }
             //            .skeletonAnimationConfig(config_1)
             .skeletonAnimation(controller: controller_1)

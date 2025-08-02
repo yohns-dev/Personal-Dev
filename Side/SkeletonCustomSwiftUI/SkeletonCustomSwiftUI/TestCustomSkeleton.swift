@@ -15,7 +15,7 @@ struct TestCustomSkeleton: View {
                         .spacer(height: 12),
                         .hStack(spacing: 12, alignment: .center, items: [
                             .circle(size: 40),
-                            .rectangle(widthRatio: 0.7, height: 16, cornerRadius: 6)
+                            .rectangle(widthRatio: 0.5, height: 16, cornerRadius: 6)
                         ])
                     ],
                     stack: .vStack(spacing: 16, alignment: .center)
