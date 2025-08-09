@@ -4,6 +4,7 @@ struct WidgetItem: Identifiable, Equatable, Hashable {
     let id: UUID
     var title: String
     var rect: WidgetGridRect
+    var kind: WidgetKind
 }
 
 struct WidgetGridRect: Equatable, Hashable {
@@ -13,3 +14,6 @@ struct WidgetGridRect: Equatable, Hashable {
     var colSpan: Int
 }
 
+enum WidgetKind {
+    case calendar, todo, memo
+}

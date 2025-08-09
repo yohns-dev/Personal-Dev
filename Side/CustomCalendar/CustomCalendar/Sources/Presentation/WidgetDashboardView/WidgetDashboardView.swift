@@ -5,9 +5,9 @@ struct WidgetDashboardView: View {
     //TODO: widget을 viewModel 자체에서 생성하게 만들고 SwiftData를 통해 widget 관리할 수 있도록 만들기
     @StateObject private var viewModel = WidgetDashboardViewModel(
         widgets: [
-            WidgetItem(id: UUID(), title: "Calendar", rect: .init(row: 0, col: 0, rowSpan: 2, colSpan: 2)),
-            WidgetItem(id: UUID(), title: "TODO", rect: .init(row: 0, col: 2, rowSpan: 1, colSpan: 2)),
-            WidgetItem(id: UUID(), title: "Memo", rect: .init(row: 2, col: 0, rowSpan: 2, colSpan: 3))
+            WidgetItem(id: UUID(), title: "Calendar", rect: .init(row: 0, col: 0, rowSpan: 2, colSpan: 2), kind: .calendar),
+            WidgetItem(id: UUID(), title: "TODO", rect: .init(row: 0, col: 2, rowSpan: 1, colSpan: 2), kind: .todo),
+            WidgetItem(id: UUID(), title: "Memo", rect: .init(row: 2, col: 0, rowSpan: 2, colSpan: 3), kind: .memo)
         ]
     )
     
@@ -19,11 +19,26 @@ struct WidgetDashboardView: View {
             let cellSize = CGSize(width: geometry.size.width / CGFloat(viewModel.cols), height: geometry.size.height / CGFloat(viewModel.rows))
             
             ZStack {
-                #if DEBUG // 실선 표시
+#if DEBUG // 실선 표시
                 gridBackground(rows: viewModel.rows, cols: viewModel.cols, cellSize: cellSize)
-                #endif
-                ForEach(viewModel.widgets) { widget in
-                    WidgetView(widget: widget, cellSize: cellSize, rows: viewModel.rows, cols: viewModel.cols, isEditing: isEditing)
+#endif
+                ForEach(viewModel.widgets, id: \.self) { (widget: WidgetItem) in
+                    WidgetView(
+                        widget: widget,
+                        cellSize: cellSize,
+                        rows: viewModel.rows,
+                        cols: viewModel.cols,
+                        isEditing: isEditing
+                    ) { size in
+                        switch widget.kind {
+                        case .calendar:
+                            CalendarWidgetView()
+                        case .todo:
+                            TodoWidgetView()
+                        case .memo:
+                            MemoWidgetView()
+                        }
+                    }
                 }
             }
             .padding(12)
