@@ -30,7 +30,7 @@ struct MainView: View {
     }
     
     private func setupWidgetDashboard() -> some View {
-        WidgetDashboardView()
+        WidgetDashboardView(isEditing: $isEditDashboard)
             .padding(.horizontal)
     }
 }

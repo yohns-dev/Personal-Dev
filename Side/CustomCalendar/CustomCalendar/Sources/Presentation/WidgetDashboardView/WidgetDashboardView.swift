@@ -11,6 +11,8 @@ struct WidgetDashboardView: View {
         ]
     )
     
+    @Binding var isEditing: Bool
+    
     var body: some View {
         GeometryReader { geometry in
             //TODO: 최종적으로 CGSize는 정사각형으로 될 수있도록 계산 식 추가 필요
@@ -21,7 +23,7 @@ struct WidgetDashboardView: View {
                 gridBackground(rows: viewModel.rows, cols: viewModel.cols, cellSize: cellSize)
                 #endif
                 ForEach(viewModel.widgets) { widget in
-                    WidgetView(widget: widget, cellSize: cellSize, rows: viewModel.rows, cols: viewModel.cols)
+                    WidgetView(widget: widget, cellSize: cellSize, rows: viewModel.rows, cols: viewModel.cols, isEditing: isEditing)
                 }
             }
             .padding(12)

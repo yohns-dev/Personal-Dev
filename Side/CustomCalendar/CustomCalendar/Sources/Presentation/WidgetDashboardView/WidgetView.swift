@@ -17,11 +17,14 @@ struct WidgetView: View {
     @State private var resizeStartRect: WidgetGridRect?
     @State private var liveResizeSize: CGSize?
     
-    init(widget: WidgetItem, cellSize: CGSize, rows: Int, cols: Int) {
+    let isEditing: Bool
+    
+    init(widget: WidgetItem, cellSize: CGSize, rows: Int, cols: Int, isEditing: Bool) {
         self.widget = widget
         self.cellSize = cellSize
         self.rows = rows
         self.cols = cols
+        self.isEditing = isEditing
         _currentRect = State(initialValue: widget.rect)
     }
     
@@ -40,13 +43,15 @@ struct WidgetView: View {
                 .foregroundStyle(.white)
                 .padding(8)
             
-            VStack {
-                Spacer()
-                HStack {
+            if isEditing {
+                VStack {
                     Spacer()
-                    ResizeHandle()
-                        .gesture(resizeGesture)
-                        .padding(6)
+                    HStack {
+                        Spacer()
+                        ResizeHandle()
+                            .gesture(resizeGesture)
+                            .padding(6)
+                    }
                 }
             }
         }
@@ -77,19 +82,21 @@ struct WidgetView: View {
     private var dragGesture: some Gesture {
         DragGesture(minimumDistance: 4)
             .onChanged { value in
-                if dragStartRect == nil { dragStartRect = currentRect }
-                guard let start = dragStartRect else { return }
-                
-                let dragCol = Int(round(value.translation.width / cellSize.width))
-                let dragRow = Int(round(value.translation.height / cellSize.height))
-                
-                var candidate = start
-                candidate.col = clamp(candidate.col + dragCol, 0, cols - candidate.colSpan)
-                candidate.row = clamp(candidate.row + dragRow, 0, rows - candidate.rowSpan)
-                
-                let (snap, result) = viewModel.tentativeValidRect(for: widget.id, candidate: candidate)
-                currentRect = snap
-                isValid = result
+                if isEditing {
+                    if dragStartRect == nil { dragStartRect = currentRect }
+                    guard let start = dragStartRect else { return }
+                    
+                    let dragCol = Int(round(value.translation.width / cellSize.width))
+                    let dragRow = Int(round(value.translation.height / cellSize.height))
+                    
+                    var candidate = start
+                    candidate.col = clamp(candidate.col + dragCol, 0, cols - candidate.colSpan)
+                    candidate.row = clamp(candidate.row + dragRow, 0, rows - candidate.rowSpan)
+                    
+                    let (snap, result) = viewModel.tentativeValidRect(for: widget.id, candidate: candidate)
+                    currentRect = snap
+                    isValid = result
+                }
             }
             .onEnded { _ in
                 guard let start = dragStartRect else { return }
