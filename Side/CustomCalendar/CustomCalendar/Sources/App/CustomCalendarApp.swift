@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct CustomCalendarApp: App {
@@ -6,5 +7,6 @@ struct CustomCalendarApp: App {
         WindowGroup {
             MainView()
         }
+        .modelContainer(for: WidgetItem.self)
     }
 }

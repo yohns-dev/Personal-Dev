@@ -1,12 +1,15 @@
 import SwiftUI
 
 struct WidgetView<Content: View>: View {
-    @EnvironmentObject private var viewModel: WidgetDashboardViewModel
-    
     let widget: WidgetItem
     let cellSize: CGSize
     let rows: Int
     let cols: Int
+    let isEditing: Bool
+    
+    // 검증/커밋 콜백
+    let tentative: (_ id: UUID, _ candidate: WidgetGridRect) -> (WidgetGridRect, Bool)
+    let commitMove: (_ id: UUID, _ rect: WidgetGridRect) -> Bool
     
     @ViewBuilder let content: (_ availableSize: CGSize) -> Content
     
@@ -15,18 +18,27 @@ struct WidgetView<Content: View>: View {
     @State private var currentRect: WidgetGridRect
     @State private var isValid: Bool = true
     
-    // 사이즈 컨트롤
+    // 리사이즈 컨트롤
     @State private var resizeStartRect: WidgetGridRect?
     @State private var liveResizeSize: CGSize?
     
-    let isEditing: Bool
-    
-    init(widget: WidgetItem, cellSize: CGSize, rows: Int, cols: Int, isEditing: Bool, @ViewBuilder content: @escaping (_ availableSize: CGSize) -> Content) {
+    init(
+        widget: WidgetItem,
+        cellSize: CGSize,
+        rows: Int,
+        cols: Int,
+        isEditing: Bool,
+        tentative: @escaping (_ id: UUID, _ candidate: WidgetGridRect) -> (WidgetGridRect, Bool),
+        commitMove: @escaping (_ id: UUID, _ rect: WidgetGridRect) -> Bool,
+        @ViewBuilder content: @escaping (_ availableSize: CGSize) -> Content
+    ) {
         self.widget = widget
         self.cellSize = cellSize
         self.rows = rows
         self.cols = cols
         self.isEditing = isEditing
+        self.tentative = tentative
+        self.commitMove = commitMove
         self.content = content
         _currentRect = State(initialValue: widget.rect)
     }
@@ -52,7 +64,6 @@ struct WidgetView<Content: View>: View {
                 .clipped()
             }
             
-            
             if isEditing {
                 VStack {
                     Spacer()
@@ -68,9 +79,11 @@ struct WidgetView<Content: View>: View {
         .frame(width: displayFrame.size.width, height: displayFrame.size.height)
         .position(x: displayFrame.midX, y: displayFrame.midY)
         .gesture(isEditing ? dragGesture : nil)
-        .onChange(of: widget.rect) { _, newValue in
-            currentRect = newValue
-        }
+        // SwiftData값을 추적하여 자동으로 변경되게 함.
+        .onChange(of: widget.row)      { _, _ in currentRect = widget.rect }
+        .onChange(of: widget.col)      { _, _ in currentRect = widget.rect }
+        .onChange(of: widget.rowSpan)  { _, _ in currentRect = widget.rect }
+        .onChange(of: widget.colSpan)  { _, _ in currentRect = widget.rect }
         .animation(.snappy(duration: 0.12), value: currentRect)
     }
     
@@ -78,15 +91,16 @@ struct WidgetView<Content: View>: View {
         let baseFrame = rectToFrame(currentRect, cellSize: cellSize)
         let displayWidth  = liveResizeSize?.width  ?? baseFrame.size.width
         let displayHeight = liveResizeSize?.height ?? baseFrame.size.height
-        let displayFrame = CGRect(x: baseFrame.origin.x, y: baseFrame.origin.y, width: displayWidth, height: displayHeight)
-        return displayFrame
+        return CGRect(x: baseFrame.origin.x, y: baseFrame.origin.y, width: displayWidth, height: displayHeight)
     }
     
     private func rectToFrame(_ rect: WidgetGridRect, cellSize: CGSize) -> CGRect {
-        CGRect(x: CGFloat(rect.col) * cellSize.width,
-               y: CGFloat(rect.row) * cellSize.height,
-               width: CGFloat(rect.colSpan) * cellSize.width,
-               height: CGFloat(rect.rowSpan) * cellSize.height)
+        CGRect(
+            x: CGFloat(rect.col) * cellSize.width,
+            y: CGFloat(rect.row) * cellSize.height,
+            width: CGFloat(rect.colSpan) * cellSize.width,
+            height: CGFloat(rect.rowSpan) * cellSize.height
+        )
     }
     
     private var dragGesture: some Gesture {
@@ -95,23 +109,22 @@ struct WidgetView<Content: View>: View {
                 if dragStartRect == nil { dragStartRect = currentRect }
                 guard let start = dragStartRect else { return }
                 
-                let dragCol = Int(round(value.translation.width / cellSize.width))
+                let dragCol = Int(round(value.translation.width  / cellSize.width))
                 let dragRow = Int(round(value.translation.height / cellSize.height))
                 
                 var candidate = start
                 candidate.col = clamp(candidate.col + dragCol, 0, cols - candidate.colSpan)
                 candidate.row = clamp(candidate.row + dragRow, 0, rows - candidate.rowSpan)
                 
-                let (snap, result) = viewModel.tentativeValidRect(for: widget.id, candidate: candidate)
+                let (snap, result) = tentative(widget.id, candidate)
                 currentRect = snap
                 isValid = result
-                
             }
             .onEnded { _ in
                 guard let start = dragStartRect else { return }
                 dragStartRect = nil
                 if isValid {
-                    _ = viewModel.tryMove(widget.id, to: currentRect)
+                    if !commitMove(widget.id, currentRect) { currentRect = start }
                 } else {
                     currentRect = start
                 }
@@ -124,21 +137,20 @@ struct WidgetView<Content: View>: View {
             .onChanged { value in
                 if resizeStartRect == nil {
                     resizeStartRect = currentRect
-                    let startFrame = rectToFrame(currentRect, cellSize: cellSize)
-                    liveResizeSize = startFrame.size
+                    liveResizeSize = rectToFrame(currentRect, cellSize: cellSize).size
                 }
                 guard let start = resizeStartRect, var live = liveResizeSize else { return }
                 
                 live.width  += value.translation.width
                 live.height += value.translation.height
                 
-                let minW = cellSize.width
-                let minH = cellSize.height
-                let maxW = CGFloat(cols - start.col) * cellSize.width
-                let maxH = CGFloat(rows - start.row) * cellSize.height
+                let minWidth = cellSize.width
+                let minHeight = cellSize.height
+                let maxWidth = CGFloat(cols - start.col) * cellSize.width
+                let maxHeight = CGFloat(rows - start.row) * cellSize.height
                 
-                live.width  = max(minW, min(maxW, live.width))
-                live.height = max(minH, min(maxH, live.height))
+                live.width  = max(minWidth, min(maxWidth, live.width))
+                live.height = max(minHeight, min(maxHeight, live.height))
                 
                 liveResizeSize = live
                 
@@ -151,7 +163,7 @@ struct WidgetView<Content: View>: View {
                 candidate.colSpan = newColSpan
                 candidate.rowSpan = newRowSpan
                 
-                let (_, result) = viewModel.tentativeValidRect(for: widget.id, candidate: candidate)
+                let (_, result) = tentative(widget.id, candidate)
                 isValid = result
             }
             .onEnded { _ in
@@ -166,10 +178,10 @@ struct WidgetView<Content: View>: View {
                 candidate.colSpan = newColSpan
                 candidate.rowSpan = newRowSpan
                 
-                let (snap, result) = viewModel.tentativeValidRect(for: widget.id, candidate: candidate)
+                let (snap, result) = tentative(widget.id, candidate)
                 if result {
-                    currentRect = snap
-                    _ = viewModel.tryMove(widget.id, to: snap)
+                    if !commitMove(widget.id, snap) { currentRect = start }
+                    else { currentRect = snap }
                 } else {
                     currentRect = start
                 }
@@ -178,14 +190,11 @@ struct WidgetView<Content: View>: View {
                 liveResizeSize = nil
                 isValid = true
             }
-        
     }
     
     private func clamp(_ value: Int, _ low: Int, _ high: Int) -> Int { min(max(value, low), high) }
 }
 
-
-// MARK: - Small UI bits
 struct ResizeHandle: View {
     var body: some View {
         ZStack {
