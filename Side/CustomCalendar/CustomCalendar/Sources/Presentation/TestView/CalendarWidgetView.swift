@@ -2,6 +2,10 @@ import SwiftUI
 
 struct CalendarWidgetView: View {
     var body: some View {
-        Text("Calendar")
+        VStack {
+            Button("test Button") { 
+                print("2222222222")
+            }
+        }
     }
 }

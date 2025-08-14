@@ -44,15 +44,9 @@ struct WidgetView<Content: View>: View {
                 )
             
             VStack(alignment: .leading, spacing: 8) {
-                Text(widget.title)
-                    .font(.headline)
-                    .foregroundStyle(.white)
-                    .padding(.top, 8)
-                    .padding(.horizontal, 8)
-                
-                // 콘텐츠 영역
                 ZStack {
                     content(innerSize)
+                        .allowsHitTesting(!isEditing)
                 }
                 .padding(8)
                 .clipped()
