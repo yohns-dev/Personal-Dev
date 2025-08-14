@@ -2,12 +2,13 @@ import SwiftUI
 
 struct WidgetView<Content: View>: View {
     let widget: WidgetItem
+    let initialRect: WidgetGridRect
     let cellSize: CGSize
     let rows: Int
     let cols: Int
     let isEditing: Bool
     
-    // 검증/커밋 콜백
+    // 검증/커밋 콜백 차후 변경 예정
     let tentative: (_ id: UUID, _ candidate: WidgetGridRect) -> (WidgetGridRect, Bool)
     let commitMove: (_ id: UUID, _ rect: WidgetGridRect) -> Bool
     
@@ -24,6 +25,7 @@ struct WidgetView<Content: View>: View {
     
     init(
         widget: WidgetItem,
+        initialRect: WidgetGridRect,
         cellSize: CGSize,
         rows: Int,
         cols: Int,
@@ -33,6 +35,7 @@ struct WidgetView<Content: View>: View {
         @ViewBuilder content: @escaping (_ availableSize: CGSize) -> Content
     ) {
         self.widget = widget
+        self.initialRect = initialRect
         self.cellSize = cellSize
         self.rows = rows
         self.cols = cols
@@ -40,7 +43,7 @@ struct WidgetView<Content: View>: View {
         self.tentative = tentative
         self.commitMove = commitMove
         self.content = content
-        _currentRect = State(initialValue: widget.rect)
+        _currentRect = State(initialValue: initialRect)
     }
     
     var body: some View {
@@ -80,10 +83,10 @@ struct WidgetView<Content: View>: View {
         .position(x: displayFrame.midX, y: displayFrame.midY)
         .gesture(isEditing ? dragGesture : nil)
         // SwiftData값을 추적하여 자동으로 변경되게 함.
-        .onChange(of: widget.row)      { _, _ in currentRect = widget.rect }
-        .onChange(of: widget.col)      { _, _ in currentRect = widget.rect }
-        .onChange(of: widget.rowSpan)  { _, _ in currentRect = widget.rect }
-        .onChange(of: widget.colSpan)  { _, _ in currentRect = widget.rect }
+        .onChange(of: widget.row)     { _, _ in if let rect = widget.rect { currentRect = rect } }
+        .onChange(of: widget.col)     { _, _ in if let rect = widget.rect { currentRect = rect } }
+        .onChange(of: widget.rowSpan) { _, _ in if let rect = widget.rect { currentRect = rect } }
+        .onChange(of: widget.colSpan) { _, _ in if let rect = widget.rect { currentRect = rect } }
         .animation(.snappy(duration: 0.12), value: currentRect)
     }
     
