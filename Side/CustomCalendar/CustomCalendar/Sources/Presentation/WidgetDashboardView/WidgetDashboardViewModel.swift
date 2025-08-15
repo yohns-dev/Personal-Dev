@@ -6,14 +6,15 @@ import Combine
 final class WidgetDashboardViewModel: ObservableObject {
     @Published private(set) var widgets: [WidgetItem] = []
     @Published var activeWidgetID: UUID? = nil
+    
     private var modelContext: ModelContext?
     private var cancellable: AnyCancellable?
     
     let rows: Int
     let cols: Int
     
-    //TODO: 현재 사이즈에 따라 row, col 값을 바꿀 수 있도록 변경 및 기획 필요
-    init(rows: Int = 4, cols: Int = 4) {
+    // TODO: 화면 크기에 따라 rows/cols 동적 조정 기획 가능
+    init(rows: Int = 8, cols: Int = 8) {
         self.rows = rows
         self.cols = cols
     }
@@ -22,9 +23,7 @@ final class WidgetDashboardViewModel: ObservableObject {
         cancellable?.cancel()
     }
     
-    //MARK: Setting ViewModel
-    
-    //TODO: 해당 컴바인은 iOS 18+ 임으로 17+ 로직 추가 필요
+    // MARK: - Context & Auto-refresh
     func attachModelContext(_ modelContext: ModelContext) {
         self.modelContext = modelContext
         cancellable?.cancel()
@@ -42,13 +41,42 @@ final class WidgetDashboardViewModel: ObservableObject {
     
     func loadWidgets() {
         guard let modelContext else { return }
-        let desc = FetchDescriptor<WidgetItem>(sortBy: [SortDescriptor(\.createdAt, order: .forward)])
+        let desc = FetchDescriptor<WidgetItem>(
+            sortBy: [SortDescriptor(\.createdAt, order: .forward)]
+        )
         widgets = (try? modelContext.fetch(desc)) ?? []
-        print("widgets: \(widgets)")
         assignRectForNewWidget()
     }
     
-    // 새로운 widget 위치 설정
+    // MARK: - CRUD
+    func addWidget(kind: WidgetKind) {
+        guard let modelContext else { return }
+        let item = WidgetItem(kind: kind, title: kind.rawValue)
+        modelContext.insert(item)
+        try? modelContext.save()
+        assignRect(item)
+        loadWidgets()
+    }
+    
+    func removeWidgets(ids: [UUID]) {
+        guard let modelContext, !ids.isEmpty else { return }
+        let desc = FetchDescriptor<WidgetItem>()
+        guard let all = try? modelContext.fetch(desc) else { return }
+
+        for id in ids {
+            if let target = all.first(where: { $0.id == id }) {
+                modelContext.delete(target)
+            }
+        }
+        try? modelContext.save()
+        
+        if let active = activeWidgetID, ids.contains(active) {
+            activeWidgetID = nil
+        }
+        loadWidgets()
+    }
+    
+    // MARK: - Placement helpers
     private func assignRectForNewWidget() {
         for widget in widgets where widget.rect == nil {
             assignRect(widget)
@@ -64,6 +92,7 @@ final class WidgetDashboardViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Move/Resize Validation & Commit
     func tentativeValidRect(for id: UUID, candidate: WidgetGridRect) -> (WidgetGridRect, Bool) {
         let result = isFree(candidate, in: widgets, excluding: id)
         return (candidate, result)
@@ -80,9 +109,7 @@ final class WidgetDashboardViewModel: ObservableObject {
         return true
     }
     
-    //MARK: 위젯의 위치, 크기 조절 함수
-    
-    //규칙 함수
+    // MARK: - Rules
     func isInside(_ rect: WidgetGridRect) -> Bool {
         rect.row >= 0 &&
         rect.col >= 0 &&
@@ -111,13 +138,12 @@ final class WidgetDashboardViewModel: ObservableObject {
     
     func researchFreeRect(rowSpan: Int, colSpan: Int, widgets: [WidgetItem]) -> WidgetGridRect? {
         guard rowSpan > 0, colSpan > 0,
-              rowSpan <= rows,
-              colSpan <= cols
+              rowSpan <= rows, colSpan <= cols
         else { return nil }
         
-        for rect in 0...(rows - rowSpan) {
+        for row in 0...(rows - rowSpan) {
             for col in 0...(cols - colSpan) {
-                let candidate = WidgetGridRect(row: rect, col: col, rowSpan: rowSpan, colSpan: colSpan)
+                let candidate = WidgetGridRect(row: row, col: col, rowSpan: rowSpan, colSpan: colSpan)
                 if isFree(candidate, in: widgets) { return candidate }
             }
         }
