@@ -13,7 +13,6 @@ final class WidgetDashboardViewModel: ObservableObject {
     let rows: Int
     let cols: Int
     
-    // TODO: 화면 크기에 따라 rows/cols 동적 조정 기획 가능
     init(rows: Int = 8, cols: Int = 8) {
         self.rows = rows
         self.cols = cols
