@@ -51,7 +51,7 @@ func giftSolution_1(_ friends: [String], _ gifts: [String]) -> Int {
                     giftNextNumber[friend2]! += 1
                 }
             }
-
+            
         }
     }
     
@@ -110,5 +110,50 @@ func giftSolution_2(_ friends: [String], _ gifts: [String]) -> Int {
 
 let result_1 = giftSolution_1(["muzi", "ryan", "frodo", "neo"], ["muzi frodo", "muzi frodo", "ryan muzi", "ryan muzi", "ryan muzi", "frodo muzi", "frodo ryan", "neo muzi"])
 let result_2 = giftSolution_2(["muzi", "ryan", "frodo", "neo"], ["muzi frodo", "muzi frodo", "ryan muzi", "ryan muzi", "ryan muzi", "frodo muzi", "frodo ryan", "neo muzi"])
-print(result_1)
-print(result_2)
+
+//MARK: 개인정보 수집 유효기간
+/// today: 오늘 날짜 ex) "2025.09.29"
+/// terms: ["약관 종류 약관 유효기간"] ex) ["A 6", "B 12", "C 3"]
+/// privacies: ["약관 동의 날짜 약관 종류"] ex) ["2025.09.29 A", "2025.09.28 B"]
+func privacySolution(_ today: String, _ terms: [String], _ privacies: [String]) -> [Int] {
+    var result: [Int] = []
+    let term: [String : Int] = termsFormatter(terms)
+    
+    for index in privacies.indices {
+        let separtedPrivacy = privacies[index].split(separator: " ")
+        let agreeDate = String(separtedPrivacy[0])
+        let agreeType = String(separtedPrivacy[1])
+        
+        guard let addDate = dateAddFormatter(agreeDate, term[agreeType] ?? 0, .month) else { continue }
+        
+        if addDate <= today {
+            result.append(index + 1)
+        }
+    }
+    
+    
+    return result
+}
+
+func termsFormatter(_ terms: [String]) -> [String : Int] {
+    let termsDict: [String : Int] = terms.reduce(into: [:]) { result, term in
+        let parts = term.split(separator: " ")
+        result[String(parts[0])] = Int(parts[1])
+    }
+    
+    return termsDict
+}
+
+func dateAddFormatter(_ date: String, _ addDay: Int, _ addType: Calendar.Component) -> String? {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "yyyy.MM.dd"
+    guard let date = dateFormatter.date(from: date) else { return nil }
+    guard let addedDate = Calendar.current.date(byAdding: addType, value: addDay, to: date) else { return nil }
+    
+    let result = dateFormatter.string(from: addedDate)
+    
+    return result
+}
+
+let result_3 = privacySolution("2022.05.19", ["A 6", "B 12", "C 3"], ["2021.05.02 A", "2021.07.01 B", "2022.02.19 C", "2022.02.20 C"])
+print(result_3)
