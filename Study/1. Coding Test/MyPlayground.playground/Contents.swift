@@ -156,4 +156,36 @@ func dateAddFormatter(_ date: String, _ addDay: Int, _ addType: Calendar.Compone
 }
 
 let result_3 = privacySolution("2022.05.19", ["A 6", "B 12", "C 3"], ["2021.05.02 A", "2021.07.01 B", "2022.02.19 C", "2022.02.20 C"])
-print(result_3)
+
+//MARK: 성격 유형 검사하기
+/// survey: RT, TR, FC, CF, MJ, JM, AN, NA의 값을 가진 리스트
+/// choices: 선택한 번호로 4번을 기준으로 survey에 앞뒤 문자에 점수를 부여함.
+/// 1: 매우 비동의 3점
+/// 2: 비동의 2점
+/// 3: 약간 비동의 1점
+/// 4: 모르겠음 0점
+/// 5: 약간 동의 1점
+/// 6: 동의 2점
+/// 7: 매우 동의 3점
+func personalitySolution(_ survey: [String], _ choices: [Int]) -> String {
+    var surveyDict: [String: Int] = ["R" : 0, "T" : 0, "F" : 0, "C" : 0, "M" : 0, "J" : 0, "A" : 0, "N" : 0]
+    var surveyPair: [(String, String)] = [("R", "T"), ("C", "F"), ("J", "M"), ("A", "N")]
+    var result: String = ""
+    
+    for (survey, choice) in zip(survey, choices) {
+        let partList = Array(survey)
+        if choice < 4 { surveyDict[String(partList[0]), default: 0] += (4 - choice) }
+        else if choice > 4 { surveyDict[String(partList[1]), default: 0] += ( choice - 4 ) }
+    }
+    
+    for (left, right) in surveyPair {
+        if surveyDict[left]! > surveyDict[right]! { result += left }
+        else if surveyDict[left]! < surveyDict[right]! { result += right }
+        else { result += left }
+    }
+    
+    
+    return result
+}
+
+let reuslt_4 = personalitySolution(["TR", "RT", "TR"], [7, 1, 3])
