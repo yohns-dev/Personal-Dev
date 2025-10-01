@@ -189,3 +189,35 @@ func personalitySolution(_ survey: [String], _ choices: [Int]) -> String {
 }
 
 let reuslt_4 = personalitySolution(["TR", "RT", "TR"], [7, 1, 3])
+
+
+//MARK: 신고 결과 받기
+
+func reportSolution(_ id_list: [String], _ report: [String], _ k: Int) -> [Int] {
+    var result: [Int] = []
+    var duplicatedReport: [String] = []
+    var reformReport = [String : [String]]()
+    var reportNumber = [String : Int]()
+    var sendResultId = [String : Int]()
+    
+    duplicatedReport = Array(Set(report))
+    
+    for value in duplicatedReport {
+        let reportPart = value.split(separator: " ")
+        reformReport[String(reportPart[0]), default: []].append( String(reportPart[1]))
+        reportNumber[String(reportPart[1]), default: 0] += 1
+    }
+
+    let deactivatedId: Set<String> = Set(reportNumber.filter { $0.value >= k }.map { $0.key })
+    
+    for value in reformReport {
+        let sendNumber = value.value.filter { deactivatedId.contains($0) }.count
+        sendResultId[value.key, default: 0] = sendNumber
+    }
+    
+    result = id_list.map { sendResultId[$0] ?? 0 }
+    
+    return result
+}
+
+let result_5 = reportSolution(["con", "ryan"], ["ryan con", "ryan con", "ryan con", "ryan con"], 3)
