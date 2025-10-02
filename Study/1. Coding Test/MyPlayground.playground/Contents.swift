@@ -221,3 +221,44 @@ func reportSolution(_ id_list: [String], _ report: [String], _ k: Int) -> [Int] 
 }
 
 let result_5 = reportSolution(["con", "ryan"], ["ryan con", "ryan con", "ryan con", "ryan con"], 3)
+
+//MARK: 숫자 문자열과 영단어
+/// 단순 for문 이용한 재배치
+func wordToNumberSolution_1(_ s: String) -> Int {
+    var text = s
+    let numberStringDict: [String : String] = ["zero": "0", "one" : "1", "two": "2", "three": "3", "four": "4",  "five": "5", "six": "6", "seven": "7", "eight": "8", "nine": "9"]
+    
+    for (key, value) in numberStringDict {
+        text = text.replacingOccurrences(of: key, with: value)
+    }
+    
+    return Int(text) ?? 0
+}
+
+/// buffer를 이용하여 s의 n번만에 끝내는 방식 효율적인 방법
+func wordToNumberSolution_2(_ s: String) -> Int {
+    let numberStringDict: [String : String] = ["zero": "0", "one" : "1", "two": "2", "three": "3", "four": "4",  "five": "5", "six": "6", "seven": "7", "eight": "8", "nine": "9"]
+    
+    var buffer: String = ""
+    var output: String = ""
+    
+    for value in s {
+        if value.isNumber {
+            output.append(value)
+            buffer.removeAll(keepingCapacity: true)
+        }
+        else {
+            buffer.append(value)
+            if let transformedNumber = numberStringDict[buffer] {
+                output.append(transformedNumber)
+                buffer.removeAll(keepingCapacity: true)
+            }
+        }
+    }
+    
+    return Int(output) ?? 0
+}
+
+let result_6 = wordToNumberSolution_1("one4seveneight")
+let result_7 = wordToNumberSolution_2("one4seveneight")
+
