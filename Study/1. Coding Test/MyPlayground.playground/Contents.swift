@@ -207,7 +207,7 @@ func reportSolution(_ id_list: [String], _ report: [String], _ k: Int) -> [Int] 
         reformReport[String(reportPart[0]), default: []].append( String(reportPart[1]))
         reportNumber[String(reportPart[1]), default: 0] += 1
     }
-
+    
     let deactivatedId: Set<String> = Set(reportNumber.filter { $0.value >= k }.map { $0.key })
     
     for value in reformReport {
@@ -333,7 +333,7 @@ func userIDRecommendSolution_2(_ new_id: String) -> String {
     
     // stage 5
     if result.isEmpty { result = "a" }
-
+    
     // stage 6
     if result.count >= 16 {
         result = String(result.prefix(15))
@@ -408,8 +408,8 @@ func keyPadSolution_1(_ numbers: [Int], _ hand: String) -> String {
 /// 숫자를 받아요면 좌표로 변환하고 기준이 되는 좌표에 행렬 빼기를 시행하고 그 두 좌표의 더한 값이 결국 거리가 되기 때문 이것으로 분별이 가능
 func keyPadSolution_2(_ numbers: [Int], _ hand: String) -> String {
     var result: String = ""
-//    var leftFingerLocation: [Int] = [1,4]
-//    var rightFingerLocation: [Int] = [3,4]
+    //    var leftFingerLocation: [Int] = [1,4]
+    //    var rightFingerLocation: [Int] = [3,4]
     
     for number in numbers {
         
@@ -422,5 +422,30 @@ func keyPadSolution_2(_ numbers: [Int], _ hand: String) -> String {
 let result_10 = keyPadSolution_1([7, 0, 8, 2, 8, 3, 1, 5, 7, 6, 2], "left")
 let result_11 = keyPadSolution_2([1, 3, 4, 5, 8, 2, 1, 4, 5, 9, 5], "right")
 
-print(result_10)
-print(result_11)
+//MARK: 크레인 인형뽑기 게임
+/// board[row][col]
+func clawMachineGameSolution(_ board: [[Int]], _ moves: [Int]) -> Int {
+    var result: Int = 0
+    var board = board
+    var bucket: [Int] = []
+    
+    for col in moves {
+        for row in board.indices {
+            if board[row][col-1] != 0 {
+                bucket.append(board[row][col-1])
+                board[row][col-1] = 0
+                if bucket.count >= 2 && bucket[bucket.count-1] == bucket[bucket.count-2] {
+                    result += 2
+                    bucket.removeLast(2)
+                    
+                }
+                break
+            }
+        }
+    }
+    
+    return result
+}
+
+let result_12 = clawMachineGameSolution([[0,0,0,0,0],[0,0,1,0,3],[0,2,5,0,1],[4,2,4,4,2],[3,5,1,3,1]], [1,5,3,5,1,2,1,4])
+print(result_12)
