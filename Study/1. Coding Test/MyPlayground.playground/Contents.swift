@@ -352,3 +352,75 @@ func userIDRecommendSolution_2(_ new_id: String) -> String {
 
 let result_8 = userIDRecommendSolution_1("...!@BaT#*..y.abcdefghijklm...")
 let result_9 = userIDRecommendSolution_2("...!@BaT#*..y.abcdefghijklm...")
+
+func keyPadSolution_1(_ numbers: [Int], _ hand: String) -> String {
+    var result: String = ""
+    let hand: String = hand.prefix(1).uppercased()
+    var leftFingerNumber: Int = 10
+    var rightFingerNumber: Int = 12
+    
+    for number in numbers {
+        if number % 3 == 1 {
+            leftFingerNumber = number
+            result.append("L")
+        }
+        else if number % 3 == 0 && number != 0 {
+            rightFingerNumber = number
+            result.append("R")
+        }
+        else {
+            var number = number
+            if number == 0 { number = 11 }
+            let rightNumberDistance = abs(number - rightFingerNumber)
+            let leftNumberDistance = abs(number - leftFingerNumber)
+            
+            let dividingRight = (rightNumberDistance / 3, rightNumberDistance % 3)
+            let dividingLeft = (leftNumberDistance / 3, leftNumberDistance % 3)
+            
+            var leftDistance: Int = dividingLeft.0 + dividingLeft.1
+            var rightDistance: Int = dividingRight.0 + dividingRight.1
+            
+            if leftDistance == rightDistance {
+                result.append(hand)
+                if hand == "R" {
+                    rightFingerNumber = number
+                }
+                else {
+                    leftFingerNumber = number
+                }
+            }
+            else {
+                if leftDistance > rightDistance {
+                    result.append("R")
+                    rightFingerNumber = number
+                }
+                else {
+                    result.append("L")
+                    leftFingerNumber = number
+                }
+            }
+        }
+    }
+    return result
+}
+
+/// 이건 시간이 없음으로 생략
+/// 숫자를 받아요면 좌표로 변환하고 기준이 되는 좌표에 행렬 빼기를 시행하고 그 두 좌표의 더한 값이 결국 거리가 되기 때문 이것으로 분별이 가능
+func keyPadSolution_2(_ numbers: [Int], _ hand: String) -> String {
+    var result: String = ""
+//    var leftFingerLocation: [Int] = [1,4]
+//    var rightFingerLocation: [Int] = [3,4]
+    
+    for number in numbers {
+        
+    }
+    
+    
+    return result
+}
+
+let result_10 = keyPadSolution_1([7, 0, 8, 2, 8, 3, 1, 5, 7, 6, 2], "left")
+let result_11 = keyPadSolution_2([1, 3, 4, 5, 8, 2, 1, 4, 5, 9, 5], "right")
+
+print(result_10)
+print(result_11)
