@@ -262,3 +262,93 @@ func wordToNumberSolution_2(_ s: String) -> Int {
 let result_6 = wordToNumberSolution_1("one4seveneight")
 let result_7 = wordToNumberSolution_2("one4seveneight")
 
+func userIDRecommendSolution_1(_ new_id: String) -> String {
+    // stage 1
+    var result: String = new_id.lowercased()
+    
+    // stage 2
+    result = result.replacingOccurrences(of: #"[^a-z0-9._-]"#, with: "", options: .regularExpression)
+    
+    // stage 3
+    var buffer: String = ""
+    var isDotStraight: Bool = false
+    for value in result {
+        if value == "." && isDotStraight == false {
+            isDotStraight = true
+            buffer += String(value)
+        }
+        else if value == "." && isDotStraight {
+            continue
+        }
+        else {
+            buffer += String(value)
+            isDotStraight = false
+        }
+    }
+    result = buffer
+    
+    // stage 4
+    if result.first == "." {
+        result.removeFirst(1)
+    }
+    if result.last == "." {
+        result.removeLast(1)
+    }
+    
+    // stage 5
+    if result == "" {
+        result += "a"
+    }
+    
+    // stage 6
+    if result.count >= 16 {
+        result = String(result.prefix(15))
+        if result.last == "." {
+            result.removeLast(1)
+        }
+    }
+    
+    // stage 7
+    while result.count <= 2 {
+        result += result.suffix(1)
+    }
+    
+    
+    
+    return result
+}
+
+func userIDRecommendSolution_2(_ new_id: String) -> String {
+    // stage 1
+    var result = new_id.lowercased()
+    
+    // stage 2
+    result = result.replacingOccurrences(of: #"[^a-z0-9._-]"#, with: "", options: .regularExpression)
+    
+    // stage 3
+    result = result.replacingOccurrences(of: #"\.{2,}"#, with: ".", options: .regularExpression)
+    
+    // stage 4
+    result = result.trimmingCharacters(in: CharacterSet(charactersIn: (".")))
+    
+    // stage 5
+    if result.isEmpty { result = "a" }
+
+    // stage 6
+    if result.count >= 16 {
+        result = String(result.prefix(15))
+        result = result.trimmingCharacters(in: CharacterSet(charactersIn: (".")))
+    }
+    
+    // stage 7
+    if result.count < 3 {
+        while result.count < 3 {
+            result.append(String(result.suffix(1)))
+        }
+    }
+    
+    return result
+}
+
+let result_8 = userIDRecommendSolution_1("...!@BaT#*..y.abcdefghijklm...")
+let result_9 = userIDRecommendSolution_2("...!@BaT#*..y.abcdefghijklm...")
