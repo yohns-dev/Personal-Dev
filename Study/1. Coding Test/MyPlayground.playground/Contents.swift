@@ -481,3 +481,43 @@ func failureRateSolution(_ N: Int, _ stages: [Int]) -> [Int] {
 
 let result_13 = failureRateSolution(5, [2, 1, 2, 6, 2, 4, 3, 3])
 
+//MARK: 다트 게임
+
+func dartGameSolution(_ dartResult: String) -> Int {
+    var numberBuffer: String = ""
+    var dartScore = [Int]()
+    
+    for i in dartResult {
+        if i.isNumber { numberBuffer.append(i); continue }
+        if i == "S" || i == "D" || i == "T" {
+            let score: Int
+            guard let point = Int(numberBuffer) else { continue }
+            numberBuffer = ""
+            
+            switch i {
+            case "S": score = Int(pow(Double(point), 1))
+            case "D": score = Int(pow(Double(point), 2))
+            case "T": score = Int(pow(Double(point), 3))
+            default: score = point
+            }
+            dartScore.append(score)
+        }
+        else if i == "*" || i == "#" {
+            
+            switch i {
+            case "*":
+                dartScore[dartScore.count - 1] *= 2
+                if dartScore.count >= 2 {
+                    dartScore[dartScore.count - 2] *= 2
+                }
+            case "#": dartScore[dartScore.count - 1] *= -1
+            default : break
+            }
+        }
+    }
+    
+    
+    return dartScore.reduce(0, +)
+}
+
+let result_14 = dartGameSolution("1S2D*3T")
