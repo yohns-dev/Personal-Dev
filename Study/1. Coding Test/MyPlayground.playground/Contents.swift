@@ -448,4 +448,36 @@ func clawMachineGameSolution(_ board: [[Int]], _ moves: [Int]) -> Int {
 }
 
 let result_12 = clawMachineGameSolution([[0,0,0,0,0],[0,0,1,0,3],[0,2,5,0,1],[4,2,4,4,2],[3,5,1,3,1]], [1,5,3,5,1,2,1,4])
-print(result_12)
+
+//MARK: 실패율
+/// 실패율 : 도달하였으나 깨지 못한 플레이어의 수 / 도달한 플레이어의 수
+func failureRateSolution(_ N: Int, _ stages: [Int]) -> [Int] {
+    var result = [Int]()
+    var stageStayNumber = Array(repeating: 0, count: N+2)
+    var failureDict = [Int: Double]()
+    var clearNumber: Int = stages.count
+    
+    for stage in stages {
+        if stage <= N { stageStayNumber[stage] += 1 }
+        else { stageStayNumber[N+1] += 1 }
+    }
+    
+    for stage in 1...N {
+        let failureRate = (clearNumber == 0) ? 0.0 : Double(stageStayNumber[stage]) / Double(clearNumber)
+        clearNumber -= stageStayNumber[stage]
+        failureDict[stage] = failureRate
+    }
+    
+    result = failureDict.sorted { leftValue, rightValue in
+        if leftValue.value == rightValue.value {
+            return leftValue.key < rightValue.key
+        }
+        
+        return leftValue.value > rightValue.value
+    }.map { $0.key }
+    
+    return result
+}
+
+let result_13 = failureRateSolution(5, [2, 1, 2, 6, 2, 4, 3, 3])
+
