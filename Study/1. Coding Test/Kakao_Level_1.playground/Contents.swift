@@ -521,3 +521,22 @@ func dartGameSolution(_ dartResult: String) -> Int {
 }
 
 let result_14 = dartGameSolution("1S2D*3T")
+
+//MARK: 비밀지도
+
+func marauderMapSolution(_ n: Int, _ arr1: [Int], _ arr2: [Int]) -> [String] {
+    var result = [String]()
+    
+    for i in 0..<n {
+        let orBitWise = arr1[i] | arr2[i]
+        let binary = String(orBitWise, radix: 2)
+        let transBinary = (n > binary.count) ? String(repeating: "0", count: n - binary.count) + binary : binary
+        let trans1ToWall = transBinary.replacingOccurrences(of: "1", with: "#")
+        let trans0ToSpace = trans1ToWall.replacingOccurrences(of: "0", with: " ")
+        result.append(trans0ToSpace)
+    }
+    
+    return result
+}
+
+let result_15 = marauderMapSolution(6, [46, 33, 33, 22, 31, 50], [27, 56, 19, 14, 14, 10])
