@@ -280,3 +280,34 @@ func nNumberGameSolution(_ n: Int, _ t: Int, _ m: Int, _ p: Int) -> String {
 }
 
 let result_6 = nNumberGameSolution(16, 16, 2, 1)
+
+//MARK: 오픈 채팅방
+
+func openChatSolution(_ record: [String]) -> [String] {
+    var result = [String]()
+    var userDict = [String: String]()
+    var eventList = [(String, String)]()
+    
+    for i in record {
+        let splitedRecord = i.split(separator: " ")
+        eventList.append((String(splitedRecord[0]), String(splitedRecord[1])))
+        if splitedRecord[0] != "Leave" {
+            userDict[String(splitedRecord[1])] = String(splitedRecord[2])
+        }
+        
+    }
+    
+    for i in eventList {
+        switch i.0 {
+        case "Enter": result.append("\(userDict[String(i.1)]!)님이 들어왔습니다.")
+        case "Leave": result.append("\(userDict[String(i.1)]!)님이 나갔습니다.")
+        case "Change": continue
+        default:
+            continue
+        }
+    }
+    
+    return result
+}
+
+let result_7 = openChatSolution(["Enter uid1234 Muzi", "Enter uid4567 Prodo","Leave uid1234","Enter uid1234 Prodo","Change uid4567 Ryan"])
