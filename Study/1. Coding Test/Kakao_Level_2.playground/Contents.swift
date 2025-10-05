@@ -178,5 +178,53 @@ func findMusicSolution_sub_DateDistance(_ time1: String, _ time2: String) -> Int
 
 let result_3 = findMusicSolution("ABC", ["12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"])
 
+//MARK: 압축
 
+func compressionSolution(_ msg: String) -> [Int] {
+    var result = [Int]()
+    var compressionDict = [String: Int]()
+    let msgList = Array(String(msg))
+    let alphabetUnicodeList = (UnicodeScalar("A").value...UnicodeScalar("Z").value).compactMap {
+        String(UnicodeScalar($0)!)
+    }
+    
+    for i in alphabetUnicodeList.indices {
+        compressionDict[alphabetUnicodeList[i]] = i+1
+    }
+    
+    var index = 1
+    var compareString = ""
+    
+    for i in msgList {
+        index += 1
+        if let value = compressionDict[compareString + String(i)] {
+            compareString += String(i)
+            continue
+        }
+        else {
+            result.append(compressionDict[compareString]!)
+            compareString += String(i)
+            compressionDict[compareString] = compressionDict.count + 1
+            compareString = String(i)
+            
+        }
+    }
+    
+    if index == msgList.count + 1 {
+        result.append(compressionDict[compareString]!)
+    }
+    
+    return result
+}
 
+let result_4 = compressionSolution("TOBEORNOTTOBEORTOBEORNOT")
+
+//MARK: 파일명 정렬
+func fileNameSortingSolution(_ files: [String]) -> [String] {
+    
+    
+    
+    return []
+}
+
+let result_5 = fileNameSortingSolution(["img12.png", "img10.png", "img02.png", "img1.png", "IMG01.GIF", "img2.JPG"])
