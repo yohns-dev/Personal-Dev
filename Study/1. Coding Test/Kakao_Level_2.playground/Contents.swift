@@ -258,3 +258,25 @@ func fileNameSortingSolution_sub_separator(_ str: String) -> [String] {
 }
 
 let result_5 = fileNameSortingSolution(["F-5 Freedom Fighter", "B-50 Superfortress", "A-10 Thunderbolt II", "F-14 Tomcat2311dsaad"])
+
+//MARK: n진수 게임
+
+func nNumberGameSolution(_ n: Int, _ t: Int, _ m: Int, _ p: Int) -> String {
+    var result = ""
+    var nNumberString = ""
+    for i in 0..<t*m {
+        let nNumber = String(i, radix: n).uppercased()
+        nNumberString += nNumber
+    }
+    
+    result = String(nNumberString.enumerated()
+        .filter { index, _ in index % m == (p-1)}
+        .reduce(into: "") { result, element in
+            result.append(element.element)
+        }
+        .prefix(t))
+    
+    return result
+}
+
+let result_6 = nNumberGameSolution(16, 16, 2, 1)
