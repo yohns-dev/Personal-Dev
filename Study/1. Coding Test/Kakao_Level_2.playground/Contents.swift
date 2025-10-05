@@ -98,13 +98,13 @@ func findMusicSolution(_ m: String, _ musicinfos: [String]) -> String {
     var resultDict = [(String, Int)]()
     
     for i in musicinfos {
-//        let mTransString = findMusicSolution_sub_SharpStringToLowecaseString(m, regex: /[A-Z]#?/)
+        //        let mTransString = findMusicSolution_sub_SharpStringToLowecaseString(m, regex: /[A-Z]#?/)
         let mTransString = findMusicSolution_sub_SharpStringToLowecaseString(m, separator: "#")
         var musicinfoToList = i.split(separator: ",").map { String($0) }
         let playTime = findMusicSolution_sub_DateDistance(musicinfoToList[0], musicinfoToList[1])
         //정규식을 사용하지 않는 방식
-      musicinfoToList[3] = findMusicSolution_sub_SharpStringToLowecaseString(String(musicinfoToList[3]), separator: "#")
-//        musicinfoToList[3] = findMusicSolution_sub_SharpStringToLowecaseString(String(musicinfoToList[3]), regex: /[A-Z]#?/)
+        musicinfoToList[3] = findMusicSolution_sub_SharpStringToLowecaseString(String(musicinfoToList[3]), separator: "#")
+        //        musicinfoToList[3] = findMusicSolution_sub_SharpStringToLowecaseString(String(musicinfoToList[3]), regex: /[A-Z]#?/)
         let totalPlayTone = String(repeating: musicinfoToList[3], count: (playTime / musicinfoToList[3].count) + 1).prefix(playTime)
         
         if totalPlayTone.contains(mTransString) {
@@ -221,10 +221,40 @@ let result_4 = compressionSolution("TOBEORNOTTOBEORTOBEORNOT")
 
 //MARK: 파일명 정렬
 func fileNameSortingSolution(_ files: [String]) -> [String] {
+    let trans = files.sorted {
+        let right = fileNameSortingSolution_sub_separator($0)
+        let left = fileNameSortingSolution_sub_separator($1)
+        if right[0].lowercased() == left[0].lowercased() {
+            return Int(right[1])! < Int(left[1])!
+        }
+        else {
+            return right[0].lowercased() < left[0].lowercased()
+        }
+    }
     
-    
-    
-    return []
+    return trans
 }
 
-let result_5 = fileNameSortingSolution(["img12.png", "img10.png", "img02.png", "img1.png", "IMG01.GIF", "img2.JPG"])
+func fileNameSortingSolution_sub_separator(_ str: String) -> [String] {
+    var header: String = ""
+    var number: String = ""
+    var isNotTransed: Bool = false
+    var isEtc: Bool = false
+    
+    for i in str {
+        if (i.isLetter || i == "-" || i == "." || i == " ") && !isNotTransed {
+            header += String(i)
+        }
+        else if isNotTransed && i.isLetter {
+            isEtc = true
+        }
+        else if i.isNumber && !isEtc {
+            if !isNotTransed { isNotTransed = true }
+            number += String(i)
+        }
+    }
+    
+    return [header, number]
+}
+
+let result_5 = fileNameSortingSolution(["F-5 Freedom Fighter", "B-50 Superfortress", "A-10 Thunderbolt II", "F-14 Tomcat2311dsaad"])
