@@ -91,3 +91,92 @@ func friends4BlockSolution(_ m: Int, _ n: Int, _ board: [String]) -> Int {
 }
 
 let result_2 = friends4BlockSolution(4,5, ["CCBDE", "AAADE", "AAABF", "CCBBF"])
+
+//MARK: 방금 그 곡
+
+func findMusicSolution(_ m: String, _ musicinfos: [String]) -> String {
+    var resultDict = [(String, Int)]()
+    
+    for i in musicinfos {
+//        let mTransString = findMusicSolution_sub_SharpStringToLowecaseString(m, regex: /[A-Z]#?/)
+        let mTransString = findMusicSolution_sub_SharpStringToLowecaseString(m, separator: "#")
+        var musicinfoToList = i.split(separator: ",").map { String($0) }
+        let playTime = findMusicSolution_sub_DateDistance(musicinfoToList[0], musicinfoToList[1])
+        //정규식을 사용하지 않는 방식
+      musicinfoToList[3] = findMusicSolution_sub_SharpStringToLowecaseString(String(musicinfoToList[3]), separator: "#")
+//        musicinfoToList[3] = findMusicSolution_sub_SharpStringToLowecaseString(String(musicinfoToList[3]), regex: /[A-Z]#?/)
+        let totalPlayTone = String(repeating: musicinfoToList[3], count: (playTime / musicinfoToList[3].count) + 1).prefix(playTime)
+        
+        if totalPlayTone.contains(mTransString) {
+            resultDict.append( (String(musicinfoToList[2]), playTime))
+        }
+    }
+    
+    if resultDict.isEmpty {
+        return "(None)"
+    }
+    else {
+        guard let result = resultDict.max(by: {$0.1 < $1.1}) else { return "" }
+        return result.0
+    }
+}
+
+func findMusicSolution_sub_SharpStringToLowecaseString(_ s: String, regex: Regex<Substring>) -> String {
+    let transToLowerCase = s.matches(of: regex).map {
+        if String($0.0).count != 1 {
+            let transResult = String($0.0).lowercased().dropLast(1)
+            return String(transResult)
+        }
+        else {
+            return String($0.0)
+        }
+    }
+    
+    let result = transToLowerCase.reduce(into: "", { $0 += $1 })
+    
+    return result
+    
+}
+
+func findMusicSolution_sub_SharpStringToLowecaseString(_ s: String, separator: String? = nil) -> String {
+    if separator != nil {
+        var separatorList: [String] = []
+        var buffer: String = ""
+        guard let separator = separator else { return "" }
+        for str in s {
+            if String(str) != separator { buffer += String(str) }
+            else {
+                let trans = buffer.last?.lowercased() ?? ""
+                buffer.removeLast(1)
+                buffer += trans
+                separatorList.append(buffer)
+                buffer = ""
+            }
+        }
+        
+        separatorList.append(buffer)
+        
+        let result = separatorList.reduce(into: "") { $0 += $1 }
+        
+        return result
+    }
+    
+    return ""
+}
+
+func findMusicSolution_sub_DateDistance(_ time1: String, _ time2: String) -> Int {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "HH:mm"
+    
+    let start = formatter.date(from: time1)!
+    let end = formatter.date(from: time2)!
+    
+    let distance = Calendar.current.dateComponents([.minute], from: start, to: end).minute ?? 0
+    
+    return Int(abs(distance))
+}
+
+let result_3 = findMusicSolution("ABC", ["12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"])
+
+
+
