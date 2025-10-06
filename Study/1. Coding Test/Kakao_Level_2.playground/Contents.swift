@@ -311,3 +311,43 @@ func openChatSolution(_ record: [String]) -> [String] {
 }
 
 let result_7 = openChatSolution(["Enter uid1234 Muzi", "Enter uid4567 Prodo","Leave uid1234","Enter uid1234 Prodo","Change uid4567 Ryan"])
+
+//MARK: 후보키
+
+func candidateKeySolution(_ relation: [[String]]) -> Int {
+    let row = relation.count
+    let col = relation.first?.count ?? 0
+    var candidates: [Int] = []
+    var seen: Set<String>
+    
+    guard row > 0, col > 0 else { return 0 }
+    
+    for i in 1..<(1 << col) {
+        var forContinue = false
+        for candidate in candidates {
+            if (candidate & i) == candidate { forContinue = true; break }
+        }
+        
+        if forContinue { continue }
+        
+        seen = Set<String>()
+        
+        for j in 0..<row {
+            var temp: [String] = []
+            
+            for k in 0..<col where (i & (1 << k) != 0) {
+                temp.append(relation[j][k])
+            }
+            
+            let tempString = temp.joined(separator: "\u{1F}")
+            seen.insert(tempString)
+        }
+        
+        if seen.count == row { candidates.append(i) }
+    }
+    
+    return candidates.count
+}
+
+
+let result_8 = candidateKeySolution([["100","ryan","music","2"],["200","apeach","math","2"],["300","tube","computer","3"],["400","con","computer","4"],["500","muzi","music","3"],["600","apeach","music","2"]])
