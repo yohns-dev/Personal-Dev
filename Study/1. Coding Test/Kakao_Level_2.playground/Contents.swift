@@ -351,3 +351,114 @@ func candidateKeySolution(_ relation: [[String]]) -> Int {
 
 
 let result_8 = candidateKeySolution([["100","ryan","music","2"],["200","apeach","math","2"],["300","tube","computer","3"],["400","con","computer","4"],["500","muzi","music","3"],["600","apeach","music","2"]])
+
+//MARK: 문자열 압축
+
+func stringCompressionSolution(_ s: String) -> Int {
+    let stringCount = s.count
+    var result = stringCount
+    
+    if stringCount <= 1 { return result }
+    
+    for i in 1...(stringCount / 2) {
+        var index = 0
+        var totalCount = 0
+        let startIndex = s.index(s.startIndex, offsetBy: 0)
+        let endIndex = s.index(startIndex, offsetBy: i)
+        index += i
+        
+        var compareString = s[startIndex..<endIndex]
+        var duplicationCount = 1
+        for j in 0..<((stringCount / i)-1) {
+            let startIndex = s.index(s.startIndex, offsetBy: index, limitedBy: s.endIndex) ?? s.endIndex
+            let endIndex = s.index(startIndex, offsetBy: i, limitedBy: s.endIndex) ?? s.endIndex
+            index += i
+            
+            let nextString = s[startIndex..<endIndex]
+            
+            if nextString == compareString { duplicationCount += 1 }
+            else {
+                totalCount += compareString.count
+                if duplicationCount > 1 { totalCount += String(duplicationCount).count }
+                compareString = nextString
+                duplicationCount = 1
+            }
+        }
+        
+        totalCount += compareString.count
+        if duplicationCount > 1 { totalCount += String(duplicationCount).count }
+        totalCount += (stringCount % i)
+        result = min(totalCount, result)
+    }
+    
+    return result
+}
+
+let result_9 = stringCompressionSolution("abcabcabcabcdededededede")
+
+//MARK: 괄호 변환
+
+func transParenthesesSolution(_ p: String) -> String {
+    if p.isEmpty { return "" }
+    var result = ""
+    var pString = p
+    var buffers: [String] = []
+    var remain: String = ""
+    
+    while p.count > result.count {
+        let (u,v) = transParenthesesSolution_sub_transToUnV(pString)
+        if u == "" {
+            if remain != "" { result += remain; remain = "" }
+            if let suffix = buffers.popLast() {
+                result += suffix
+                continue
+            }
+            else {
+                break
+            }
+        }
+        
+        var isRightU: Bool = true
+        var balanceCount: Int = 0
+        for str in u.description {
+            balanceCount += (str == "(") ? 1 : -1
+            if balanceCount < 0 { isRightU = false; break }
+        }
+        
+        if isRightU {
+            if buffers.isEmpty {
+                result += u
+            }
+            else {
+                remain += u
+            }
+            pString = v
+        }
+        else {
+            result += remain + "("
+            let transedU = u.dropFirst().dropLast().map { $0 == "(" ? ")" : "(" }.joined()
+            buffers.append(")" + transedU)
+            pString = v
+            remain = ""
+        }
+    }
+    
+    return result
+}
+
+func transParenthesesSolution_sub_transToUnV(_ p: String) -> (u: String, v: String) {
+    if p == "" { return ("", "") }
+    var balanceCount: Int = 0
+    var uIndex: String.Index = p.startIndex
+    
+    for i in p.indices {
+        balanceCount += (p[i] == "(") ? 1 : -1
+        if balanceCount == 0 { uIndex = i; break }
+    }
+    let vIndex = p.index(after: uIndex)
+    let u: String = String(p[...uIndex])
+    let v: String = String(p[vIndex...])
+    return (u,v)
+}
+
+let result_10 = transParenthesesSolution("()))((()")
