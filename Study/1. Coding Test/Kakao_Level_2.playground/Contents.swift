@@ -462,3 +462,42 @@ func transParenthesesSolution_sub_transToUnV(_ p: String) -> (u: String, v: Stri
 }
 
 let result_10 = transParenthesesSolution("()))((()")
+
+//MARK: 튜플
+
+func tupleSolution_1(_ s: String) -> [Int] {
+   var transedSToList: [[Int]] = []
+    var result: [Int] = []
+    
+    for match in s.matches(of: /\{([0-9,]+)\}/) {
+        let result = match.1.split(separator: ",").compactMap { Int($0) }
+        transedSToList.append(result)
+    }
+    transedSToList = transedSToList.sorted { $0.count < $1.count }
+    
+    for i in transedSToList {
+        if i.count == 1 { result.append(i[0]) }
+        else { result.append(i.filter { result.contains($0) == false }[0])}
+    }
+    
+    return result
+}
+
+func tupleSolution_2(_ s: String) -> [Int] {
+    var result: [Int] = []
+    
+    let toJson = s.replacingOccurrences(of: "{", with: "[").replacingOccurrences(of: "}", with: "]")
+    guard let data = toJson.data(using: .utf8), var transedSToList = try? JSONDecoder().decode([[Int]].self, from: data) else { return []}
+    
+    transedSToList = transedSToList.sorted { $0.count < $1.count }
+    
+    for i in transedSToList {
+        if i.count == 1 { result.append(i[0]) }
+        else { result.append(i.filter { result.contains($0) == false }[0])}
+    }
+    
+    return result
+}
+
+let result_11 = tupleSolution_1("{{2},{2,1,3},{2,1},{2,1,3,4}}")
+let result_12 = tupleSolution_2("{{2},{2,1,3},{2,1},{2,1,3,4}}")
