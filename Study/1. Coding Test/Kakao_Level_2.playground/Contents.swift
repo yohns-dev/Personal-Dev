@@ -1,5 +1,218 @@
 import Foundation
 
+//MARK: 핵심 함수
+
+func nCk(_ n: Int, _ k: Int) -> [[Int]] {
+    guard k > 0, k <= n else { return [] }
+    var result = [[Int]]()
+    var index = Array(0..<k)
+    
+    while true {
+        result.append(index)
+        
+        var i = k - 1
+        while i >= 0 && index[i] == i + n - k { i -= 1 }
+        if i < 0 { break }
+        
+        index[i] += 1
+        if i < k - 1 {
+            for j in (i+1)..<k {
+                index[j] = index[j - 1] + 1
+            }
+        }
+    }
+    
+    return result
+}
+
+let nCkResult = nCk(6, 3)
+
+func nCk(_ s: String, _ k: Int) -> [String] {
+    let chars = Array(s)
+    let n = chars.count
+    guard k > 0, k <= n else { return [] }
+    var result = [String]()
+    var index = Array(0..<k)
+    
+    while true {
+        result.append(String(index.map { chars[$0] }))
+        var i = k - 1
+        while i >= 0 && index[i] == i + n - k { i -= 1 }
+        if i < 0 { break }
+        index[i] += 1
+        if i < k - 1 {
+            for j in (i+1)..<k {
+                index[j] = index[j - 1] + 1
+            }
+        }
+    }
+    
+    return result
+}
+
+let nCk_StringResult = nCk("abcdef", 3)
+
+func nPk(_ n: Int, _ k: Int) -> [[Int]] {
+    guard k > 0, k <= n else { return [] }
+    var result = [[Int]]()
+    var index = Array(0..<n)
+    let nCk = nCk(n, k)
+    
+    for nCkValue in nCk {
+        var numList = nCkValue
+        result.append(numList)
+        
+        while true {
+            if numList.count < 2 { break }
+            var i = numList.count - 2
+            while i >= 0 && numList[i] >= numList[i + 1] { i -= 1 }
+            if i < 0 { break }
+            
+            var j = numList.count - 1
+            while numList[j] < numList[i] { j -= 1 }
+            numList.swapAt(i, j)
+            numList[(i+1)...].reverse()
+            result.append(numList)
+        }
+    }
+    
+    return result
+}
+
+let nPkResult = nPk(5, 3)
+
+func nPk(_ s: String, _ k: Int) -> [String] {
+    let chars = Array(s)
+    let n = chars.count
+    guard k > 0, k <= n else { return [] }
+    var result = [String]()
+    
+    var index = Array(0..<k)
+    while true {
+        var p = index.map { chars[$0] }
+        result.append(String(p))
+        if k > 1 {
+            while true {
+                var i = k - 2
+                while i >= 0 && p[i] >= p[i + 1] { i -= 1 }
+                if i < 0 { break }
+                var j = k - 1
+                while p[j] <= p[i] { j -= 1 }
+                p.swapAt(i, j)
+                p[(i + 1)...].reverse()
+                result.append(String(p))
+            }
+        }
+        
+        var i = k - 1
+        while i >= 0 && index[i] == i + n - k { i -= 1 }
+        if i < 0 { break }
+        index[i] += 1
+        if i < k - 1 {
+            for j in (i + 1)..<k { index[j] = index[j - 1] + 1 }
+        }
+    }
+    return result
+}
+
+let nPk_StringResult = nPk("abcdef", 3)
+
+func nPk_gosper(_ n: Int, _ k: Int) -> [[Int]] {
+    guard k > 0, k <= n, n <= 62 else { return [] }
+    var result: [[Int]] = []
+    
+    var x: UInt64 = (k == 64) ? ~UInt64(0) : (UInt64(1) << UInt64(k)) - 1
+    let limit: UInt64 = UInt64(1) << UInt64(n)
+    
+    while x < limit {
+        var value: [Int] = []
+        var tmp = x
+        var pos = 0
+        while tmp != 0 {
+            if (tmp & 1) == 1 { value.append(pos) }
+            pos += 1
+            tmp >>= 1
+        }
+        var p = value
+        result.append(p)
+        if k > 1 {
+            while true {
+                var i = k - 2
+                while i >= 0 && p[i] >= p[i + 1] { i -= 1 }
+                if i < 0 { break }
+                
+                var j = k - 1
+                while p[j] <= p[i] { j -= 1 }
+                p.swapAt(i, j)
+                
+                var l = i + 1
+                var r = k - 1
+                while l < r {
+                    p.swapAt(l, r)
+                    l += 1
+                    r -= 1
+                }
+                result.append(p)
+            }
+        }
+        
+        let c: UInt64 = x & (~x &+ 1)
+        let r: UInt64 = x &+ c
+        if (r & limit) != 0 { break }
+        x = ((((r ^ x) >> 2) / c) | r)
+    }
+    
+    return result
+}
+
+let nPkGosperResult = nPk_gosper(5, 3)
+
+func nPk_gosper(_ s: String, _ k: Int) -> [String] {
+    let chars = Array(s)
+    let n = chars.count
+    guard k > 0, k <= n, n <= 62 else { return [] }
+    var result = [String]()
+    
+    var x: UInt64 = (UInt64(1) << UInt64(k)) - 1
+    let limit: UInt64 = UInt64(1) << UInt64(n)
+
+    while x < limit {
+        var value = [Character]()
+        var tmp = x
+        var pos = 0
+        while tmp != 0 {
+            let tz = tmp.trailingZeroBitCount
+            pos += tz
+            value.append(chars[pos])
+            tmp >>= (tz + 1)
+            pos += 1
+        }
+
+        var p = value
+        result.append(String(p))
+        if k > 1 {
+            while true {
+                var i = k - 2
+                while i >= 0 && p[i] >= p[i + 1] { i -= 1 }
+                if i < 0 { break }
+                var j = k - 1
+                while p[j] <= p[i] { j -= 1 }
+                p.swapAt(i, j)
+                p[(i + 1)...].reverse()
+                result.append(String(p))
+            }
+        }
+        
+        let c = x & (~x &+ 1)
+        let r = x &+ c
+        if (r & limit) != 0 { break }
+        x = ((((r ^ x) >> 2) / c) | r)
+    }
+    return result
+}
+
+let npkGosperStringResult = nPk_gosper("abcde", 3)
+
 //MARK: 뉴스 클러스터링
 func newsClustingSolution(_ str1: String, _ str2: String) -> Int {
     var result: Int = 0
@@ -466,7 +679,7 @@ let result_10 = transParenthesesSolution("()))((()")
 //MARK: 튜플
 
 func tupleSolution_1(_ s: String) -> [Int] {
-   var transedSToList: [[Int]] = []
+    var transedSToList: [[Int]] = []
     var result: [Int] = []
     
     for match in s.matches(of: /\{([0-9,]+)\}/) {
@@ -580,3 +793,27 @@ func maxValueExpressionSolution(_ expression: String) -> Int64 {
 }
 
 let result_13 = maxValueExpressionSolution("100-200*300-500+20")
+
+//MARK: 메뉴 리뉴얼
+
+func renuwalMenuSolution(_ orders: [String], _ course: [Int]) -> [String] {
+    var result = [String]()
+    for i in course {
+        var valueDict = [String : Int]()
+        for j in orders.map({ String($0.sorted()) }) {
+            let nCkList = nCk(j, i)
+            for k in nCkList {
+                valueDict[k, default: 0] += 1
+            }
+        }
+        guard let valueMax = valueDict.values.max() else { continue }
+        let maxDict = valueDict.filter { $0.value == valueMax && $0.value >= 2 }
+        result.append(contentsOf: maxDict.keys)
+    }
+    
+    
+    return result.sorted()
+}
+
+let result_14 = renuwalMenuSolution(["XYZ", "XWY", "WXA"], [2, 3, 4])
+
