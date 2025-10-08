@@ -501,3 +501,82 @@ func tupleSolution_2(_ s: String) -> [Int] {
 
 let result_11 = tupleSolution_1("{{2},{2,1,3},{2,1},{2,1,3,4}}")
 let result_12 = tupleSolution_2("{{2},{2,1,3},{2,1},{2,1,3,4}}")
+
+//MARK: 수식 최대화
+
+func maxValueExpressionSolution(_ expression: String) -> Int64 {
+    var resultList = [Int64]()
+    var numList = [Int64]()
+    var symbolList = [String]()
+    
+    var buffer = ""
+    for i in expression {
+        if i.isNumber { buffer += String(i) }
+        else {
+            symbolList.append(String(i))
+            numList.append(Int64(buffer) ?? 0)
+            buffer = ""
+        }
+    }
+    numList.append(Int64(buffer) ?? Int64(0))
+    
+    let symbolKind = Array(Set(symbolList)).sorted()
+    var calculationList = [[String]]()
+    if symbolKind.isEmpty { calculationList = [[]]}
+    else {
+        var calculation = symbolKind
+        calculationList.append(calculation)
+        var isDone: Bool = true
+        while isDone {
+            if calculation.count < 2 { isDone = false;break }
+            var i = calculation.count - 2
+            while i >= 0 && calculation[i] >= calculation[i+1] { i -= 1 }
+            if i < 0 { isDone = false;break }
+            
+            var j = calculation.count - 1
+            while calculation[j] <= calculation[i] { j -= 1 }
+            calculation.swapAt(i, j)
+            
+            var left = i+1, right = calculation.count - 1
+            while left < right {
+                calculation.swapAt(left, right)
+                left += 1
+                right -= 1
+            }
+            isDone = true
+            calculationList.append(calculation)
+        }
+    }
+    
+    for cal in calculationList {
+        var nums = numList
+        var symbols = symbolList
+        for calSymbol in cal {
+            var i = 0
+            while i < symbols.count {
+                if symbols[i] == calSymbol {
+                    let num1 = nums[i]
+                    let num2 = nums[i+1]
+                    switch calSymbol {
+                    case "+": nums[i] = num1 + num2
+                    case "-": nums[i] = num1 - num2
+                    case "*": nums[i] = num1 * num2
+                    default:
+                        nums[i] = 0
+                    }
+                    nums.remove(at: i+1)
+                    symbols.remove(at: i)
+                    
+                }
+                else {
+                    i += 1
+                }
+            }
+        }
+        resultList.append(abs(nums[0]))
+    }
+    
+    return resultList.max() ?? 0
+}
+
+let result_13 = maxValueExpressionSolution("100-200*300-500+20")
