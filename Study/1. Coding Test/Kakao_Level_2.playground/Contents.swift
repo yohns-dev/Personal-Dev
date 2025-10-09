@@ -175,7 +175,7 @@ func nPk_gosper(_ s: String, _ k: Int) -> [String] {
     
     var x: UInt64 = (UInt64(1) << UInt64(k)) - 1
     let limit: UInt64 = UInt64(1) << UInt64(n)
-
+    
     while x < limit {
         var value = [Character]()
         var tmp = x
@@ -187,7 +187,7 @@ func nPk_gosper(_ s: String, _ k: Int) -> [String] {
             tmp >>= (tz + 1)
             pos += 1
         }
-
+        
         var p = value
         result.append(String(p))
         if k > 1 {
@@ -831,7 +831,7 @@ enum JobGroup: Int, CaseIterable {
     case backend = 0; case frontend = 1
     init?(value: Substring) {
         switch value {
-            case "backend": self = .backend; case "frontend": self = .frontend; default: return nil
+        case "backend": self = .backend; case "frontend": self = .frontend; default: return nil
         }
     }
 }
@@ -839,7 +839,7 @@ enum Career: Int, CaseIterable {
     case junior = 0; case senior = 1
     init?(value: Substring) {
         switch value {
-            case "junior": self = .junior; case "senior": self = .senior; default: return nil
+        case "junior": self = .junior; case "senior": self = .senior; default: return nil
         }
     }
 }
@@ -847,7 +847,7 @@ enum Food: Int, CaseIterable {
     case chicken = 0; case pizza = 1
     init?(value: Substring) {
         switch value {
-            case "chicken": self = .chicken; case "pizza": self = .pizza; default: return nil
+        case "chicken": self = .chicken; case "pizza": self = .pizza; default: return nil
         }
     }
 }
@@ -1139,3 +1139,61 @@ func makeQueueEqualSolution(_ queue1: [Int], _ queue2: [Int]) -> Int {
 
 //let result_20 = makeQueueEqualSolution([3, 2, 7, 2], [4, 6, 5, 1])
 
+//MARK: 이모티콘 할인 행사
+
+func emoticonsDiscountSolution(_ users: [[Int]], _ emoticons: [Int]) -> [Int] {
+    let rates = [10, 20, 30, 40]
+    let n = emoticons.count
+    var index = Array(repeating: 0, count: n)
+    var bestSubscribe = 0
+    var bestCount = 0
+    var done = false
+    
+    while !done {
+        var subscribe = 0
+        var count = 0
+        
+        for u in users {
+            let minDiscount = u[0]
+            let threshold = u[1]
+            var sum = 0
+            for i in 0..<n {
+                let r = rates[index[i]]
+                if r >= minDiscount {
+                    sum += emoticons[i] * (100 - r) / 100
+                }
+            }
+            if sum >= threshold { subscribe += 1 } else { count += sum }
+        }
+        
+        if subscribe > bestSubscribe || (subscribe == bestSubscribe && count > bestCount) {
+            bestSubscribe = subscribe
+            bestCount = count
+        }
+        
+        var pos = n - 1
+        while pos >= 0 {
+            index[pos] += 1
+            if index[pos] < 4 { break }
+            index[pos] = 0
+            pos -= 1
+        }
+        if pos < 0 { done = true }
+    }
+    
+    return [bestSubscribe, bestCount]
+}
+
+let result_21 = emoticonsDiscountSolution([[40, 10000], [25, 10000]], [7000, 9000])
+
+//MARK: 택배 배달과 수거하기
+
+func deliverySolution() {
+    
+}
+
+//MARK: 도넛과 막대 그래프
+
+func graphSolution() {
+    
+}
