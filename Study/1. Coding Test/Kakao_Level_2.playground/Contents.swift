@@ -909,6 +909,66 @@ func searchRankSolution_sub_mixedRadix(_ a: Int, _ b: Int, _ c: Int, _ d: Int) -
     return (((a * JobGroup.allCases.count) + b) * Career.allCases.count + c) * Food.allCases.count + d
 }
 
+//let result_15 = searchRankSolution(["java backend junior pizza 150","python frontend senior chicken 210","python frontend senior chicken 150","cpp backend senior pizza 260","java backend junior chicken 80","python backend senior chicken 50"], ["java and backend and junior and pizza 100","python and frontend and senior and chicken 200","cpp and - and senior and pizza 250","- and backend and senior and - 150","- and - and - and chicken 100","- and - and - and - 150"])
 
+//MARK: 거리두기 확인하기
 
-let result_15 = searchRankSolution(["java backend junior pizza 150","python frontend senior chicken 210","python frontend senior chicken 150","cpp backend senior pizza 260","java backend junior chicken 80","python backend senior chicken 50"], ["java and backend and junior and pizza 100","python and frontend and senior and chicken 200","cpp and - and senior and pizza 250","- and backend and senior and - 150","- and - and - and chicken 100","- and - and - and - 150"])
+func distancingCheckSolution(_ places: [[String]]) -> [Int] {
+    var result: [Int] = []
+    
+    for place in places {
+        result.append(distancingCheckSolution_sub_isNearPerson(place: place, distance: 2))
+    }
+    
+    return result
+}
+
+func distancingCheckSolution_sub_directions(_ maxDistance: Int) -> [(Int, Int)] {
+    var result = [(Int, Int)]()
+    for row in -maxDistance...maxDistance {
+        for col in -maxDistance...maxDistance {
+            let distance = abs(row) + abs(col)
+            if distance > 0 && distance <= maxDistance {
+                result.append((row,col))
+            }
+        }
+    }
+    
+    return result
+}
+
+func distancingCheckSolution_sub_isNearPerson(place : [String], distance: Int) -> Int {
+    let place: [[Character]] = place.map { Array($0) }
+    let rowCount = place.count
+    let colCount = place[0].count
+    let directions = distancingCheckSolution_sub_directions(distance)
+    
+    for row in 0..<rowCount {
+        for col in 0..<colCount {
+            if place[row][col] == "P" {
+                for direction in directions {
+                    let nextRow = row + direction.0
+                    let nextCol = col + direction.1
+                    
+                    if nextRow < 0 || nextCol < 0 || nextRow >= rowCount || nextCol >= colCount { continue }
+                    
+                    if place[nextRow][nextCol] == "P" {
+                        let distance = abs(direction.0) + abs(direction.1)
+                        
+                        if distance == 1 { return 0 }
+                        else if distance == 2 {
+                            if direction.0 == 0 { if place[row][col + direction.1 / 2] != "X" { return 0 }}
+                            else if direction.1 == 0 { if place[row + direction.0 / 2][col] != "X" { return 0 }}
+                            else { if !(place[row][nextCol] == "X" && place[nextRow][col] == "X") { return 0 }}
+                        }
+                        
+                    }
+                    
+                }
+            }
+        }
+    }
+    return 1
+}
+
+let result_16 = distancingCheckSolution([["POOOP", "OXXOX", "OPXPX", "OOXOX", "POXXP"], ["POOPX", "OXPXP", "PXXXO", "OXXXO", "OOOPP"], ["PXOPX", "OXOXP", "OXPOX", "OXXOP", "PXPOX"], ["OOOXX", "XOOOX", "OOOXX", "OXOOX", "OOOOO"], ["PXPXP", "XPXPX", "PXPXP", "XPXPX", "PXPXP"]])
