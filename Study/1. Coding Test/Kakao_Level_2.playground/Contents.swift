@@ -1046,4 +1046,56 @@ func calculateParkingFeeSolution(_ fees: [Int], _ records: [String]) -> [Int] {
 
 //let result_18 = calculateParkingFeeSolution([1, 461, 1, 10], ["00:00 1234 IN"])
 
+//MARK: 양궁대회
+func bowCompetitionSolution(_ n: Int, _ info: [Int]) -> [Int] {
+    var result = Array(repeating: 0, count: 11)
+    var higherDiff = -1
+    var stack = [(Int, Int, Int, [Int])]()
+    stack.append((0, n, 0, Array(repeating: 0, count: 11)))
+    
+    while !stack.isEmpty {
+        let state = stack.removeLast()
+        let index = state.0
+        let remain = state.1
+        let diff = state.2
+        let scoreResult = state.3
+        
+        if index == 11 {
+            var scoreResultCopy = scoreResult
+            if remain > 0 { scoreResultCopy[10] += remain }
+            if diff > higherDiff {
+                result = scoreResultCopy
+                higherDiff = diff
+            }
+            else if diff == higherDiff {
+                var prefer = false
+                for i in stride(from: 10, through: 0, by: -1) {
+                    if scoreResultCopy[i] != result[i] {
+                        prefer = scoreResultCopy[i] > result[i]
+                        break
+                    }
+                }
+                if prefer { result = scoreResultCopy }
+            }
+            continue
+        }
+        
+        let score = 10 - index
+        let need = info[index] + 1
+        
+        if remain >= need {
+            var win = scoreResult
+            win[index] = need
+            stack.append((index+1, remain - need, diff + score, win))
+        }
+        
+        var lose = scoreResult
+        let loss = (info[index] > 0) ? score : 0
+        stack.append((index+1, remain, diff - loss, lose))
+    }
+    
+    
+    return higherDiff <= 0 ? [-1] : result
+}
 
+let result_19 = bowCompetitionSolution(5, [2,1,1,1,0,0,0,0,0,0,0])
