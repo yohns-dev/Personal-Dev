@@ -25,7 +25,7 @@ func nCk(_ n: Int, _ k: Int) -> [[Int]] {
     return result
 }
 
-let nCkResult = nCk(6, 3)
+//let nCkResult = nCk(6, 3)
 
 func nCk(_ s: String, _ k: Int) -> [String] {
     let chars = Array(s)
@@ -50,7 +50,7 @@ func nCk(_ s: String, _ k: Int) -> [String] {
     return result
 }
 
-let nCk_StringResult = nCk("abcdef", 3)
+//let nCk_StringResult = nCk("abcdef", 3)
 
 func nPk(_ n: Int, _ k: Int) -> [[Int]] {
     guard k > 0, k <= n else { return [] }
@@ -79,7 +79,7 @@ func nPk(_ n: Int, _ k: Int) -> [[Int]] {
     return result
 }
 
-let nPkResult = nPk(5, 3)
+//let nPkResult = nPk(5, 3)
 
 func nPk(_ s: String, _ k: Int) -> [String] {
     let chars = Array(s)
@@ -115,7 +115,7 @@ func nPk(_ s: String, _ k: Int) -> [String] {
     return result
 }
 
-let nPk_StringResult = nPk("abcdef", 3)
+//let nPk_StringResult = nPk("abcdef", 3)
 
 func nPk_gosper(_ n: Int, _ k: Int) -> [[Int]] {
     guard k > 0, k <= n, n <= 62 else { return [] }
@@ -165,7 +165,7 @@ func nPk_gosper(_ n: Int, _ k: Int) -> [[Int]] {
     return result
 }
 
-let nPkGosperResult = nPk_gosper(5, 3)
+//let nPkGosperResult = nPk_gosper(5, 3)
 
 func nPk_gosper(_ s: String, _ k: Int) -> [String] {
     let chars = Array(s)
@@ -211,7 +211,7 @@ func nPk_gosper(_ s: String, _ k: Int) -> [String] {
     return result
 }
 
-let npkGosperStringResult = nPk_gosper("abcde", 3)
+//let npkGosperStringResult = nPk_gosper("abcde", 3)
 
 //MARK: 뉴스 클러스터링
 func newsClustingSolution(_ str1: String, _ str2: String) -> Int {
@@ -244,7 +244,7 @@ func newsClustingSolution(_ str1: String, _ str2: String) -> Int {
     return result
 }
 
-let result_1 = newsClustingSolution("handshake", "shake hands")
+//let result_1 = newsClustingSolution("handshake", "shake hands")
 
 
 //MARK: 프렌즈 4블록
@@ -303,7 +303,7 @@ func friends4BlockSolution(_ m: Int, _ n: Int, _ board: [String]) -> Int {
     return result
 }
 
-let result_2 = friends4BlockSolution(4,5, ["CCBDE", "AAADE", "AAABF", "CCBBF"])
+//let result_2 = friends4BlockSolution(4,5, ["CCBDE", "AAADE", "AAABF", "CCBBF"])
 
 //MARK: 방금 그 곡
 
@@ -389,7 +389,7 @@ func findMusicSolution_sub_DateDistance(_ time1: String, _ time2: String) -> Int
     return Int(abs(distance))
 }
 
-let result_3 = findMusicSolution("ABC", ["12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"])
+//let result_3 = findMusicSolution("ABC", ["12:00,12:14,HELLO,C#DEFGAB", "13:00,13:05,WORLD,ABCDEF"])
 
 //MARK: 압축
 
@@ -430,7 +430,7 @@ func compressionSolution(_ msg: String) -> [Int] {
     return result
 }
 
-let result_4 = compressionSolution("TOBEORNOTTOBEORTOBEORNOT")
+//let result_4 = compressionSolution("TOBEORNOTTOBEORTOBEORNOT")
 
 //MARK: 파일명 정렬
 func fileNameSortingSolution(_ files: [String]) -> [String] {
@@ -470,7 +470,7 @@ func fileNameSortingSolution_sub_separator(_ str: String) -> [String] {
     return [header, number]
 }
 
-let result_5 = fileNameSortingSolution(["F-5 Freedom Fighter", "B-50 Superfortress", "A-10 Thunderbolt II", "F-14 Tomcat2311dsaad"])
+//let result_5 = fileNameSortingSolution(["F-5 Freedom Fighter", "B-50 Superfortress", "A-10 Thunderbolt II", "F-14 Tomcat2311dsaad"])
 
 //MARK: n진수 게임
 
@@ -492,7 +492,7 @@ func nNumberGameSolution(_ n: Int, _ t: Int, _ m: Int, _ p: Int) -> String {
     return result
 }
 
-let result_6 = nNumberGameSolution(16, 16, 2, 1)
+//let result_6 = nNumberGameSolution(16, 16, 2, 1)
 
 //MARK: 오픈 채팅방
 
@@ -523,7 +523,7 @@ func openChatSolution(_ record: [String]) -> [String] {
     return result
 }
 
-let result_7 = openChatSolution(["Enter uid1234 Muzi", "Enter uid4567 Prodo","Leave uid1234","Enter uid1234 Prodo","Change uid4567 Ryan"])
+//let result_7 = openChatSolution(["Enter uid1234 Muzi", "Enter uid4567 Prodo","Leave uid1234","Enter uid1234 Prodo","Change uid4567 Ryan"])
 
 //MARK: 후보키
 
@@ -563,7 +563,7 @@ func candidateKeySolution(_ relation: [[String]]) -> Int {
 }
 
 
-let result_8 = candidateKeySolution([["100","ryan","music","2"],["200","apeach","math","2"],["300","tube","computer","3"],["400","con","computer","4"],["500","muzi","music","3"],["600","apeach","music","2"]])
+//let result_8 = candidateKeySolution([["100","ryan","music","2"],["200","apeach","math","2"],["300","tube","computer","3"],["400","con","computer","4"],["500","muzi","music","3"],["600","apeach","music","2"]])
 
 //MARK: 문자열 압축
 
@@ -607,7 +607,7 @@ func stringCompressionSolution(_ s: String) -> Int {
     return result
 }
 
-let result_9 = stringCompressionSolution("abcabcabcabcdededededede")
+//let result_9 = stringCompressionSolution("abcabcabcabcdededededede")
 
 //MARK: 괄호 변환
 
@@ -674,7 +674,7 @@ func transParenthesesSolution_sub_transToUnV(_ p: String) -> (u: String, v: Stri
     return (u,v)
 }
 
-let result_10 = transParenthesesSolution("()))((()")
+//let result_10 = transParenthesesSolution("()))((()")
 
 //MARK: 튜플
 
@@ -712,8 +712,8 @@ func tupleSolution_2(_ s: String) -> [Int] {
     return result
 }
 
-let result_11 = tupleSolution_1("{{2},{2,1,3},{2,1},{2,1,3,4}}")
-let result_12 = tupleSolution_2("{{2},{2,1,3},{2,1},{2,1,3,4}}")
+//let result_11 = tupleSolution_1("{{2},{2,1,3},{2,1},{2,1,3,4}}")
+//let result_12 = tupleSolution_2("{{2},{2,1,3},{2,1},{2,1,3,4}}")
 
 //MARK: 수식 최대화
 
@@ -792,7 +792,7 @@ func maxValueExpressionSolution(_ expression: String) -> Int64 {
     return resultList.max() ?? 0
 }
 
-let result_13 = maxValueExpressionSolution("100-200*300-500+20")
+//let result_13 = maxValueExpressionSolution("100-200*300-500+20")
 
 //MARK: 메뉴 리뉴얼
 
@@ -815,5 +815,100 @@ func renuwalMenuSolution(_ orders: [String], _ course: [Int]) -> [String] {
     return result.sorted()
 }
 
-let result_14 = renuwalMenuSolution(["XYZ", "XWY", "WXA"], [2, 3, 4])
+//let result_14 = renuwalMenuSolution(["XYZ", "XWY", "WXA"], [2, 3, 4])
 
+//MARK: 순위 검색
+
+enum Language: Int, CaseIterable {
+    case cpp = 0; case java = 1; case python = 2
+    init?(value: Substring) {
+        switch value {
+        case "cpp": self = .cpp; case "java": self = .java; case "python": self = .python; default: return nil
+        }
+    }
+}
+enum JobGroup: Int, CaseIterable {
+    case backend = 0; case frontend = 1
+    init?(value: Substring) {
+        switch value {
+            case "backend": self = .backend; case "frontend": self = .frontend; default: return nil
+        }
+    }
+}
+enum Career: Int, CaseIterable {
+    case junior = 0; case senior = 1
+    init?(value: Substring) {
+        switch value {
+            case "junior": self = .junior; case "senior": self = .senior; default: return nil
+        }
+    }
+}
+enum Food: Int, CaseIterable {
+    case chicken = 0; case pizza = 1
+    init?(value: Substring) {
+        switch value {
+            case "chicken": self = .chicken; case "pizza": self = .pizza; default: return nil
+        }
+    }
+}
+
+func searchRankSolution(_ info: [String], _ query: [String]) -> [Int] {
+    var result = [Int]()
+    let allCaseCount = Language.self.allCases.count * JobGroup.self.allCases.count * Career.self.allCases.count * Food.self.allCases.count
+    var searchList = Array(repeating: [Int](), count: allCaseCount)
+    
+    for i in info {
+        let splitedInfo = i.split(separator: " ")
+        guard let A = Language(value: splitedInfo[0])?.rawValue,
+              let B = JobGroup(value: splitedInfo[1])?.rawValue,
+              let C = Career(value: splitedInfo[2])?.rawValue,
+              let D = Food(value: splitedInfo[3])?.rawValue,
+              let score = Int(splitedInfo[4])
+        else {return []}
+        searchList[searchRankSolution_sub_mixedRadix(A,B,C,D)].append(score)
+    }
+    
+    searchList = searchList.map { $0.sorted() }
+    
+    for j in query {
+        let splitedQuery = j.split(separator: " ")
+        let A = (splitedQuery[0] == "-") ? Language.allCases.map { $0.rawValue } : Language(value: splitedQuery[0]).map { [$0.rawValue] } ?? []
+        let B = (splitedQuery[2] == "-") ? JobGroup.allCases.map { $0.rawValue } : JobGroup(value: splitedQuery[2]).map { [$0.rawValue] } ?? []
+        let C = (splitedQuery[4] == "-") ? Career.allCases.map { $0.rawValue } : Career(value: splitedQuery[4]).map { [$0.rawValue] } ?? []
+        let D = (splitedQuery[6] == "-") ? Food.allCases.map { $0.rawValue } : Food(value: splitedQuery[6]).map { [$0.rawValue] } ?? []
+        
+        guard let score = Int(splitedQuery[7]) else { result.append(0); continue}
+        
+        var count: Int = 0
+        for a in A {
+            for b in B {
+                for c in C {
+                    for d in D {
+                        let mixedRadixNum = searchRankSolution_sub_mixedRadix(a,b,c,d)
+                        let valueList = searchList[mixedRadixNum]
+                        if valueList.isEmpty { continue }
+                        var valueCount = 0, maxCount = valueList.count
+                        while valueCount < maxCount  {
+                            let mask = (valueCount + maxCount) / 2
+                            if valueList[mask] < score { valueCount = mask + 1 } else { maxCount = mask }
+                        }
+                        count += (valueList.count - valueCount)
+                    }
+                }
+            }
+        }
+        result.append(count)
+        
+        
+    }
+    
+    return result
+}
+
+func searchRankSolution_sub_mixedRadix(_ a: Int, _ b: Int, _ c: Int, _ d: Int) -> Int {
+    return (((a * JobGroup.allCases.count) + b) * Career.allCases.count + c) * Food.allCases.count + d
+}
+
+
+
+let result_15 = searchRankSolution(["java backend junior pizza 150","python frontend senior chicken 210","python frontend senior chicken 150","cpp backend senior pizza 260","java backend junior chicken 80","python backend senior chicken 50"], ["java and backend and junior and pizza 100","python and frontend and senior and chicken 200","cpp and - and senior and pizza 250","- and backend and senior and - 150","- and - and - and chicken 100","- and - and - and - 150"])
