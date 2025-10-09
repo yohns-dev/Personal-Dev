@@ -1184,7 +1184,7 @@ func emoticonsDiscountSolution(_ users: [[Int]], _ emoticons: [Int]) -> [Int] {
     return [bestSubscribe, bestCount]
 }
 
-let result_21 = emoticonsDiscountSolution([[40, 10000], [25, 10000]], [7000, 9000])
+//let result_21 = emoticonsDiscountSolution([[40, 10000], [25, 10000]], [7000, 9000])
 
 //MARK: 택배 배달과 수거하기
 
@@ -1230,10 +1230,39 @@ func deliverySolution(_ cap:Int, _ n:Int, _ deliveries:[Int], _ pickups:[Int]) -
     return ans
 }
 
-let result_22 = deliverySolution(4, 5, [1, 0, 3, 1, 2], [0, 3, 0, 4, 0])
+//let result_22 = deliverySolution(4, 5, [1, 0, 3, 1, 2], [0, 3, 0, 4, 0])
 
 //MARK: 도넛과 막대 그래프
 
-func graphSolution() {
-    
+func graphSolution(_ edges:[[Int]]) -> [Int] {
+    if edges.isEmpty { return [0, 0, 0, 0] }
+    var maxNode = 0
+    for e in edges {
+        if e[0] > maxNode { maxNode = e[0] }
+        if e[1] > maxNode { maxNode = e[1] }
+    }
+    var present = Array(repeating: false, count: maxNode + 1)
+    var indeg = Array(repeating: 0, count: maxNode + 1)
+    var outdeg = Array(repeating: 0, count: maxNode + 1)
+    for e in edges {
+        present[e[0]] = true
+        present[e[1]] = true
+        outdeg[e[0]] += 1
+        indeg[e[1]] += 1
+    }
+    var gen = 0
+    for i in 1...maxNode {
+        if present[i] && indeg[i] == 0 && outdeg[i] >= 2 { gen = i; break }
+    }
+    var bars = 0
+    var eights = 0
+    for i in 1...maxNode {
+        if !present[i] || i == gen { continue }
+        if outdeg[i] == 0 { bars += 1 }
+        else if outdeg[i] >= 2 && indeg[i] >= 2 { eights += 1 }
+    }
+    let donuts = outdeg[gen] - bars - eights
+    return [gen, donuts, bars, eights]
 }
+
+let result_23 = graphSolution([[2, 3], [4, 3], [1, 1], [2, 1]])
