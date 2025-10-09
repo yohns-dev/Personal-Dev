@@ -1098,4 +1098,44 @@ func bowCompetitionSolution(_ n: Int, _ info: [Int]) -> [Int] {
     return higherDiff <= 0 ? [-1] : result
 }
 
-let result_19 = bowCompetitionSolution(5, [2,1,1,1,0,0,0,0,0,0,0])
+//let result_19 = bowCompetitionSolution(5, [2,1,1,1,0,0,0,0,0,0,0])
+
+//MARK: 두 큐 합 같게 만들기
+
+func makeQueueEqualSolution(_ queue1: [Int], _ queue2: [Int]) -> Int {
+    let num1 = queue1.count, num2 = queue2.count
+    let num = num1 + num2
+    
+    let queueList = queue1 + queue2
+    var sum1 = queue1.reduce(0) { $0 + $1 }
+    var sum2 = queue2.reduce(0) { $0 + $1 }
+    
+    let total = sum1 + sum2
+    
+    if total % 2 != 0 { return -1 }
+    
+    let average = total / 2
+    
+    var i = 0
+    var j = num1
+    var index = 0
+    let limit = num * 3
+    
+    while index <= limit {
+        if sum1 == average { return index }
+        if sum1 > average {
+            sum1 -= queueList[i]
+            i = (i + 1) % num
+        }
+        else {
+            sum1 += queueList[j]
+            j = (j + 1) % num
+        }
+        index += 1
+    }
+    
+    return -1
+}
+
+//let result_20 = makeQueueEqualSolution([3, 2, 7, 2], [4, 6, 5, 1])
+
