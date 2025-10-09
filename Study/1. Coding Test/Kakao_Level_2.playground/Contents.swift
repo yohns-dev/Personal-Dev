@@ -971,4 +971,79 @@ func distancingCheckSolution_sub_isNearPerson(place : [String], distance: Int) -
     return 1
 }
 
-let result_16 = distancingCheckSolution([["POOOP", "OXXOX", "OPXPX", "OOXOX", "POXXP"], ["POOPX", "OXPXP", "PXXXO", "OXXXO", "OOOPP"], ["PXOPX", "OXOXP", "OXPOX", "OXXOP", "PXPOX"], ["OOOXX", "XOOOX", "OOOXX", "OXOOX", "OOOOO"], ["PXPXP", "XPXPX", "PXPXP", "XPXPX", "PXPXP"]])
+//let result_16 = distancingCheckSolution([["POOOP", "OXXOX", "OPXPX", "OOXOX", "POXXP"], ["POOPX", "OXPXP", "PXXXO", "OXXXO", "OOOPP"], ["PXOPX", "OXOXP", "OXPOX", "OXXOP", "PXPOX"], ["OOOXX", "XOOOX", "OOOXX", "OXOOX", "OOOOO"], ["PXPXP", "XPXPX", "PXPXP", "XPXPX", "PXPXP"]])
+
+//MARK: k진수에서 소수 개수 구하기
+
+func findKPrimeNumberCountSolution(_ n:Int, _ k:Int) -> Int {
+    var result = 0
+    let radixStr = String(n, radix: k)
+    let radixList = radixStr.split(separator: "0").compactMap { Int($0) }
+    
+    for i in radixList {
+        if findKPrimeNumberCountSolution_sub_isPrime(i) { result += 1 }
+    }
+    
+    return result
+}
+
+func findKPrimeNumberCountSolution_sub_isPrime(_ num: Int) -> Bool {
+    if num < 2 { return false }
+    if num == 2 { return true }
+    if num % 2 == 0 { return false }
+    
+    var i = 3
+    while i * i <= num {
+        if num % i == 0 { return false }
+        i += 2
+    }
+    
+    return true
+}
+
+//let result_17 = findKPrimeNumberCountSolution(110011, 10)
+
+//MARK: 주차 요금 게산
+
+func calculateParkingFeeSolution(_ fees: [Int], _ records: [String]) -> [Int] {
+    var result = [Int]()
+    let baseTime = fees[0], baseFee = fees[1], unitTime = fees[2], unitFee = fees[3]
+    
+    var inTimeDict = [String : Int]()
+    var totalTimeDict = [String: Int]()
+    
+    for record in records {
+        let splitedRecord = record.split(separator: " ")
+        let timeMap = splitedRecord[0].split(separator: ":").map { Int($0) ?? 0 }
+        let time = (timeMap[0] * 60 + timeMap[1])
+        let car = String(splitedRecord[1]), state = splitedRecord[2]
+        
+        if state == "IN" {
+            inTimeDict[String(car), default: 0] = time
+        }
+        else {
+            totalTimeDict[car, default: 0] += (time - (inTimeDict[car] ?? 0 ))
+            inTimeDict.removeValue(forKey: car)
+        }
+    }
+    
+    for (car, start) in inTimeDict {
+        totalTimeDict[car, default: 0] += (23*60 + 59) - start
+    }
+    
+    for car in totalTimeDict.keys.sorted() {
+        let time = totalTimeDict[car] ?? 0
+        if time <= baseTime { result.append(baseFee); continue }
+        let extraTime = time - baseTime
+        let extraFee = (extraTime % unitTime == 0) ? Int( extraTime / unitTime) * unitFee : (Int( extraTime / unitTime) + 1) * unitFee
+        
+        result.append((baseFee + extraFee))
+    }
+    
+    
+    return result
+}
+
+//let result_18 = calculateParkingFeeSolution([1, 461, 1, 10], ["00:00 1234 IN"])
+
+
