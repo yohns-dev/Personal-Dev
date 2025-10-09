@@ -1188,9 +1188,49 @@ let result_21 = emoticonsDiscountSolution([[40, 10000], [25, 10000]], [7000, 900
 
 //MARK: 택배 배달과 수거하기
 
-func deliverySolution() {
+func deliverySolution(_ cap:Int, _ n:Int, _ deliveries:[Int], _ pickups:[Int]) -> Int64 {
+    var d = deliveries
+    var p = pickups
+    var i = n - 1
+    var j = n - 1
+    var ans: Int64 = 0
     
+    while i >= 0 || j >= 0 {
+        while i >= 0 && d[i] == 0 { i -= 1 }
+        while j >= 0 && p[j] == 0 { j -= 1 }
+        if i < 0 && j < 0 { break }
+        
+        let dist = max(i, j) + 1
+        ans += Int64(dist * 2)
+        
+        var carry = cap
+        var k = i
+        while k >= 0 && carry > 0 {
+            if d[k] > 0 {
+                let use = min(carry, d[k])
+                d[k] -= use
+                carry -= use
+            }
+            if d[k] == 0 { k -= 1 }
+        }
+        i = k
+        
+        carry = cap
+        k = j
+        while k >= 0 && carry > 0 {
+            if p[k] > 0 {
+                let use = min(carry, p[k])
+                p[k] -= use
+                carry -= use
+            }
+            if p[k] == 0 { k -= 1 }
+        }
+        j = k
+    }
+    return ans
 }
+
+let result_22 = deliverySolution(4, 5, [1, 0, 3, 1, 2], [0, 3, 0, 4, 0])
 
 //MARK: 도넛과 막대 그래프
 
