@@ -82,24 +82,108 @@ func solution_1(_ dice: [[Int]]) -> [Int] {
     return bestCombine.map { $0 + 1 }
 }
 
-let result_1 = solution_1([[1, 2, 3, 4, 5, 6], [3, 3, 3, 3, 4, 4], [1, 3, 3, 4, 4, 4], [1, 1, 4, 4, 5, 5]])
+//let result_1 = solution_1([[1, 2, 3, 4, 5, 6], [3, 3, 3, 3, 4, 4], [1, 3, 3, 4, 4, 4], [1, 1, 4, 4, 5, 5]])
 
-//MARK:
+//MARK: n+1 카드 게임
 
-func solution_2() {
+func solution_2(_ coin: Int, _ cards: [Int]) -> Int {
+    let n = cards.count
+    var coins = coin
+    var target = n + 1
+    var hand = Set(cards.prefix(n/3))
+    var pool = Set<Int>()
+    var index = n/3
+    var rounds = 1
     
+    while true {
+        if index >= n { break }
+        pool.insert(cards[index])
+        index += 1
+        
+        if index < n { pool.insert(cards[index]); index += 1 }
+        
+        var card1 = -1, card2 = -1
+        var found = false
+        
+        // 손에 있는 경우
+        for i in hand {
+            let value = target - i
+            if value != i && hand.contains(value) {
+                card1 = i
+                card2 = value
+                found = true
+            }
+        }
+        
+        if found {
+            hand.remove(card1)
+            hand.remove(card2)
+            rounds += 1
+            continue
+        }
+        
+        //코인 한개로 가능한 경우
+        if coins >= 1 {
+            for i in hand {
+                let value = target - i
+                if pool.contains(value) { card1 = i; card2 = value; found = true; break }
+            }
+            
+            if found {
+                hand.remove(card1)
+                pool.remove(card2)
+                coins -= 1
+                rounds += 1
+                continue
+            }
+        }
+        
+        //코인 2개로 되는 경우
+        
+        if coins >= 2 {
+            for i in pool {
+                let value = target - i
+                if value != i && pool.contains(value) { card1 = i; card2 = value; found = true; break }
+            }
+            if found {
+                pool.remove(card1)
+                pool.remove(card2)
+                coins -= 2
+                rounds += 1
+                continue
+            }
+        }
+        
+        break
+        
+    }
+    
+    return rounds
 }
 
-let result_2 = 0
+//let result_2 = solution_2(3, [1, 2, 3, 4, 5, 8, 6, 7, 9, 10, 11, 12])
 
+//MARK: 산 모양 타일링아
 
-//MARK:
-
-func solution_3() {
+func solution_3(_ n: Int, _ tops: [Int]) -> Int {
+    let m = 10007
+    var a = 1
+    var b = (tops[0] == 1 ? 3 : 2) % m
+    if 2 * n == 1 { return b }
     
+    var cur = 0
+    if 2 * n >= 2 {
+        for i in 2...(2 * n) {
+            if i % 2 == 1 && tops[i / 2] == 1 { cur = ( (b * 2) % m + a ) % m }
+            else { cur = (b + a) % m }
+            a = b
+            b = cur
+        }
+    }
+    return b % m
 }
 
-let result_3 = 0
+let result_3 = solution_3(4, [1, 1, 0, 1])
 
 //MARK:
 
