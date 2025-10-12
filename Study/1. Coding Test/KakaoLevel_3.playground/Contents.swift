@@ -163,7 +163,7 @@ func solution_2(_ coin: Int, _ cards: [Int]) -> Int {
 
 //let result_2 = solution_2(3, [1, 2, 3, 4, 5, 8, 6, 7, 9, 10, 11, 12])
 
-//MARK: 산 모양 타일링아
+//MARK: 산 모양 타일링
 
 func solution_3(_ n: Int, _ tops: [Int]) -> Int {
     let m = 10007
