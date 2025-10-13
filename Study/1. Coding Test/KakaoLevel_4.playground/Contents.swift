@@ -2,52 +2,72 @@ import Foundation
 
 
 //MARK: 1,2,3 떨어트리기
-/// 각 부모의 자식 노드로 묶어 값을 저장 할 것
 
 func solution_1(_ edges: [[Int]], _ target: [Int]) -> [Int] {
-    // 각 숫자의 자식 표현 [ [], [], [], [], [], [],... ] 형식으로 표현하여 각 자신의 값의 자식을 찾기
-    // 위의 형식은 결국 마지막 숫자와 개수가 같아야 함.
+    // 노드의 사이클 찾기
+    // 사이클의 최소 횟수(ceil 3)와 최대 횟수 max 값을 각각 구하고 최소 횟수의 최대 값이 이 범위 안에 있는 지 확인
+    // 범위 안이라면 최소 횟수의 사이클 만큼 크기를 만들고 필요 없는 부분은 삭제 - 이부분 생각해보기 
+    // 해당 리스트에 전체적으로 1을 추가하고 뒤에서 부터 값을 최대 값으로 넣어도 되는 지 확인하면서 값 변경
+    var n = 0
+    for i in edges { n = max(n, i[0], i[1]) }
     
-    var maxIndex = 0
+    var tree = Array(repeating: [Int](), count: n + 1) // var1
     
-    for i in edges {
-        if i.count == 2 {
-            maxIndex = max(maxIndex, i[0], i[1])
+    for i in edges { tree[i[0]].append(i[1]) }
+    for i in tree.indices { tree[i] = tree[i].sorted() }
+    
+    var node = Array(repeating: 0, count: n+1) // var2
+    
+    var leaf = Array(repeating: false, count: n + 1) // var3
+    for i in tree.indices {
+        if tree[i].isEmpty {
+            leaf[i] = true
         }
     }
     
-    var tree: [[Int]] = Array(repeating: [], count: maxIndex + 1)
+    var cycle = [Int]() // var4
     
-    for i in edges {
-        tree[i[0]].append(i[1])
+    var currentNode = 1
+    while true {
+        let nextNode = tree[currentNode][node[currentNode]]
+        if leaf[nextNode] {
+            cycle.append(nextNode)
+            node[currentNode] = (node[currentNode] + 1) % tree[currentNode].count
+            currentNode = 1
+            if node.reduce(0, +) == 0 { break }
+        }
+        else {
+            node[currentNode] = (node[currentNode] + 1) % tree[currentNode].count
+            currentNode = nextNode
+        }
     }
     
-    var nextNode: [Int] = Array(repeating: 0, count: maxIndex + 1)
     
-    var index = 0
-    for i in target {
-        //TODO: node로 변환하기 전에 그 값이 마지막인지 확인 후 그 값이 마지막일 때 처리 추가 하기 혹은 리스트 만들기
-//        if i == 0 {
-//            var node = tree[nextNode[1] + 1][nextNode[nextNode[1] + 1]]
-//            while true {
-//                let treeNode = tree[nextNode[node] + 1]
-//                if treeNode.isEmpty { break }
-//                node = treeNode[nextNode[node] + 1]
-//            }
-//            print(node)
-//        }
-        var node = tree[nextNode[1] + 1][nextNode[nextNode[1] + 1]]
-        while true {
-            let treeNode = tree[node]
-            if treeNode.isEmpty { break }
-            node = treeNode[nextNode[node]]
-        }
+    // TODO: 이부분 좀 더 생각해보기
+    var cycleDict = [Int: Int]()
+    for i in cycle { cycleDict[i, default: 0] += 1 }
+    
+    var minRangeList = [Int]()
+    var maxRangeList = [Int]()
+    
+    for (i,j) in cycleDict {
         
+        minRangeList.append(Int(ceil(max(0,ceil(Double(target[i - 1]) / 3.0) - Double(j)) / Double(j))))
+        maxRangeList.append(Int(Double(target[i - 1]) / Double(j)))
     }
     
-    print(tree)
-    print(nextNode)
-    print("1")
+    if minRangeList.max()! > maxRangeList.min()! { return [-1] }
+    
+    var cicleCount = minRangeList.max()! //var 5
+    
+    var result = Array(repeating: 1, count: n)
+    
+    
+    
+    
+    
+    print(minRangeList, maxRangeList)
+    
     return []
 }
 
