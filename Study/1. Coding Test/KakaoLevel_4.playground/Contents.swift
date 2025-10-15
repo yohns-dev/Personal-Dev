@@ -166,7 +166,23 @@ func solution_1(_ edges: [[Int]], _ target: [Int]) -> [Int] {
     return result
 }
 
-let result_1 = solution_1(
-    [[2, 4], [1, 2], [6, 8], [1, 3], [5, 7], [2, 5], [3, 6], [6, 10], [6, 9]],
-    [0, 0, 0, 3, 0, 0, 5, 1, 2, 3]
-)
+//let result_1 = solution_1( [[2, 4], [1, 2], [6, 8], [1, 3], [5, 7], [2, 5], [3, 6], [6, 10], [6, 9]], [0, 0, 0, 3, 0, 0, 5, 1, 2, 3] )
+
+//MARK: 행렬과 연산
+///  col기준 3개의 리스트로 만들어 회전 및 쉬프트 구현하기
+
+func solution_2(_ rc: [[Int]], _ operations: [String]) -> [[Int]] {
+    
+    return []
+}
+
+let result_2 = solution_2([[1, 2, 3], [4, 5, 6], [7, 8, 9]], ["Rotate", "ShiftRow"])
+
+//MARK: 미로 탈출
+///Dijkstra 이용하기 
+func solution_3(_ n: Int, _ start: Int, _ end: Int, _ roads: [[Int]], _ traps: [Int]) -> Int {
+    
+    return 0
+}
+
+let result_3 = solution_3(3, 1, 3, [[1, 2, 2], [3, 2, 3]], [2])
