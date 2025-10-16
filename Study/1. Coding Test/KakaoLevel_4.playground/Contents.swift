@@ -179,10 +179,20 @@ func solution_2(_ rc: [[Int]], _ operations: [String]) -> [[Int]] {
 let result_2 = solution_2([[1, 2, 3], [4, 5, 6], [7, 8, 9]], ["Rotate", "ShiftRow"])
 
 //MARK: 미로 탈출
-///Dijkstra 이용하기 
+///Dijkstra 이용하기
 func solution_3(_ n: Int, _ start: Int, _ end: Int, _ roads: [[Int]], _ traps: [Int]) -> Int {
     
     return 0
 }
 
 let result_3 = solution_3(3, 1, 3, [[1, 2, 2], [3, 2, 3]], [2])
+
+//MARK: 매출 하락 최소화
+/// 그리드 방식 -> 각 팀에서 매출이 가장 적은 한 사람을 택하여 시작 -> 각 팀의 팀원이며 팀장인 사람으로 하나씩 변경하여 값 비교 방식
+
+func solution_4(_ sales: [Int], _ links: [[Int]]) -> Int {
+    
+    return 0
+}
+
+let result_4 = solution_4([14, 17, 15, 18, 19, 14, 13, 16, 28, 17], [[10, 8], [1, 9], [9, 7], [5, 4], [1, 5], [5, 10], [10, 6], [1, 3], [10, 2]])
