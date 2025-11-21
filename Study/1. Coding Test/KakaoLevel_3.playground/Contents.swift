@@ -185,13 +185,55 @@ func solution_3(_ n: Int, _ tops: [Int]) -> Int {
 
 let result_3 = solution_3(4, [1, 1, 0, 1])
 
-//MARK:
+//MARK: 표현 가능한 이진트리
 
-func solution_4() {
+func solution_4(_ numbers: [Int64]) -> [Int] {
+    var result: [Int] = []
     
+    for num in numbers {
+        var binary = String(num, radix: 2)
+        
+        let originalLength = binary.count
+        var fullLength = 1
+        while fullLength < originalLength {
+            fullLength = fullLength * 2 + 1
+        }
+        if originalLength < fullLength {
+            let padCount = fullLength - originalLength
+            binary = String(repeating: "0", count: padCount) + binary
+        }
+
+        let chars = Array(binary)
+
+        var stack: [(Int, Int, Bool)] = []
+        stack.append((0, chars.count - 1, false))
+        
+        var isValid = true
+        
+        while !stack.isEmpty {
+            let (left, right, parentIsZero) = stack.removeLast()
+            if left > right { continue }
+            
+            let mid = (left + right) / 2
+            let curIsZero = (chars[mid] == "0")
+            
+            if parentIsZero && !curIsZero {
+                isValid = false
+                break
+            }
+            
+            let nextParentIsZero = parentIsZero || curIsZero
+            stack.append((left, mid - 1, nextParentIsZero))
+            stack.append((mid + 1, right, nextParentIsZero))
+        }
+        
+        result.append(isValid ? 1 : 0)
+    }
+    
+    return result
 }
 
-let result_4 = 0
+let result_4 = solution_4([7, 42, 5])
 
 //MARK:
 
